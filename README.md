@@ -6,17 +6,26 @@
 
 ## 修改文档
 
-Markdown 源文件在 [`source/pages/`](source/pages/)：
+Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 
-| 文件 | 页面 |
+| 路径 | 内容 |
 | --- | --- |
 | `index.md` | 首页 |
-| `deploy.md` | 部署教程 |
-| `yulan.md` | 欲蓝财务魔方 |
-| `windows-app.md` | Windows APP |
+| `deploy/index.md` | 部署总览与选型 |
+| `deploy/prepare.md` | 部署前准备 |
+| `deploy/nginx.md` | Nginx 部署（需伪静态） |
+| `deploy/apache.md` | Apache 部署（免伪静态） |
+| `deploy/builtin.md` | PHP 内置服务器 |
+| `deploy/install.md` | 安装与升级迁移 |
+| `admin/index.md` | 后台总览 |
+| `admin/products.md` | 商品管理 |
+| `admin/orders.md` | 订单与发货 |
+| `admin/payment.md` | 支付配置 |
+| `admin/settings.md` | 站点设置与其他 |
+| `yulan.md` / `windows-app.md` | 功能与配套 |
 | `faq.md` | 常见问题 |
 
-站点「编辑本页」按钮会直接跳转到这些文件的 GitHub 编辑页，改完提交后需重新构建发布。
+站点「编辑本页」按钮会直接跳转到对应文件的 GitHub 编辑页；改完提交后需重新构建发布。
 
 ## 本地构建
 
