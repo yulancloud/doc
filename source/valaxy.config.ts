@@ -104,7 +104,6 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '部署与迁移故障', link: '/troubleshoot/deploy' },
             { text: '后台与业务故障', link: '/troubleshoot/backend' },
             { text: 'Windows APP 故障', link: '/troubleshoot/app' },
-            { text: '域名 / HTTPS / 文档站', link: '/troubleshoot/domain' },
           ],
         },
       ],

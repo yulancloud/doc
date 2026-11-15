@@ -10,7 +10,7 @@ title: 故障排查总览
 
 不管什么报错，先做这三步，能解决大部分问题：
 
-1. **确认服务器跑的是新代码**：`curl https://你的域名/api/health`，看返回里的 `build` 是否为 `20261114i`。不是就说明文件没覆盖全，或 PHP/OPcache 还在跑旧代码。
+1. **确认服务器跑的是新代码**：`curl https://你的域名/api/health`，看返回里的 `build` 是否为 `20261115a`。不是就说明文件没覆盖全，或 PHP/OPcache 还在跑旧代码。
 2. **看浏览器 Network 面板**：按 `F12` → Network，复现一次操作，点开失败的请求看 **HTTP 状态码**和**响应体**。返回一段 `<?php` 源码、返回 HTML 登录页、返回 500，对应完全不同的原因。
 3. **确认刚跑过迁移**：升级覆盖文件后必须执行一次 `php bin/migrate.php`。它是幂等的，重复执行安全，且内置旧库自动修复。
 
@@ -57,21 +57,9 @@ title: 故障排查总览
 | 建号成功但角色不对 | `admin_products` 商品 ID 没配对 | [Windows APP 故障](/troubleshoot/app) |
 | 日志里出现明文密码 | 旧版本掩码缺陷，升级到 Go 版 exe | [Windows APP 故障](/troubleshoot/app) |
 
-### 文档站、域名与 HTTPS
-
-| 你看到的 | 最可能的原因 | 去哪看 |
-| --- | --- | --- |
-| `Site not found · GitHub Pages` / There isn't a GitHub Pages site here | DNS 通了但仓库**没绑定 Custom domain** | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| 域名打开白屏、JS 全 404 | 站点构建基路径还是 `/doc/`，换根域名后资源路径错 | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| `The certificate does not exist yet`、Enforce HTTPS 灰 | Cloudflare 橙云代理隐藏了 CNAME，GitHub 签不出证书 | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| 反复重定向 / 证书错误 | Cloudflare SSL 模式设成了 Flexible | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| 「编辑此页」跳 404 | 编辑链接指向了框架官方仓库 | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| 子页面分享链接 404 | 只生成了首页 HTML，缺深链静态页 | [域名与 HTTPS 故障](/troubleshoot/domain) |
-
 ## 分册导航
 
 - [部署与迁移故障](/troubleshoot/deploy) —— 500、源码泄露、迁移、缓存、权限
 - [后台与业务故障](/troubleshoot/backend) —— 真实报错文案逐条对照
 - [Windows APP 故障](/troubleshoot/app) —— 建号端连不通 / 建号失败
-- [自定义域名与 HTTPS 故障](/troubleshoot/domain) —— GitHub Pages 绑定与证书
 - [上线自检清单](/deploy/checklist) —— 交付前逐项打勾

@@ -22,7 +22,7 @@ features:
   - title: Windows APP
     details: 单文件 exe，免环境、仅管理员可运行、日志隔离、自动 UAC 提权
   - title: 按症状查故障
-    details: 部署、迁移、支付、建号、域名与证书的真实踩坑记录，附上线自检清单
+    details: 部署、迁移、支付、建号的真实踩坑记录，附上线自检清单
   - title: 开发者 · 主题定制
     details: CSS 变量换主色与亮暗配色、PHP 侧文案默认值与业务参数，附新增可配字段步骤
   - title: 开发者 · 功能自定义教程

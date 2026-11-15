@@ -2,10 +2,9 @@
 
 > 当前文档对应系统 **v1.1.0**（健康检查 `build=20261115a`）。版本变化见 [`changelog.md`](source/pages/changelog.md)。
 
-线上站点： https://doc.yulancloud.us.ci/ （原 yulancloud.github.io/doc/ 会自动跳转）
+线上站点： https://doc.yulancloud.us.ci/
 
-自定义域名配置：仓库 `Settings → Pages → Custom domain` 填 `doc.yulancloud.us.ci`，
-DNS 侧用 CNAME 把 `doc` 指向 `yulancloud.github.io`。根目录的 `CNAME` 文件由本脚本自动写入，请勿删除。
+根目录的 `CNAME` 文件由本脚本每次部署自动写入，请勿手动删除。
 
 本仓库 `main` 分支根目录即 GitHub Pages 部署产物（`dist/`），**请勿手动编辑根目录下的 html/js/css**。
 
@@ -48,7 +47,6 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | `troubleshoot/deploy.md` | 部署与迁移故障 |
 | `troubleshoot/backend.md` | 后台与业务故障 |
 | `troubleshoot/app.md` | Windows APP 故障 |
-| `troubleshoot/domain.md` | 自定义域名与 HTTPS 故障 |
 
 站点「编辑本页」按钮会直接跳转到对应文件的 GitHub 编辑页；改完提交后需重新构建发布。
 

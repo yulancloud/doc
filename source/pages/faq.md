@@ -92,33 +92,9 @@ APP 与商城服务端之间为明文 HTTP，**请勿将 APP 暴露到公网**�
 
 把运行目录设成项目根目录，`src/`、`config/`、`data/` 会变成可通过 URL 直接下载的文件——数据库、密钥、源码全泄露。**必须是 `public/`**。见 [部署前准备](/deploy/prepare)。
 
-## 文档站
-
-### Q18：文档站的正式访问地址是什么？
-
-正式地址是 **https://doc.yulancloud.us.ci/**，站点仍由 GitHub Pages 托管，只是绑定了自定义域名。原来的 `yulancloud.github.io/doc/` 会自动跳转到这个域名，建议收藏新地址。
-
-自定义域名在仓库 `Settings → Pages → Custom domain` 中设置，DNS 侧用一条 CNAME 把 `doc` 指向 `yulancloud.github.io`。
-
-### Q19：域名解析好了，打开却是 `Site not found · GitHub Pages`？
-
-DNS 通了但仓库没绑定 `Custom domain`。GitHub 按 `Host` 头分发站点，不认识这个域名就回 404。在 `Settings → Pages → Custom domain` 填入并保存即可。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
-
-### Q20：绑定后白屏、JS 全 404？
-
-站点构建基路径还是 `/doc/`，换成根域名后资源路径全错。把 `vite.base` 改成 `/` 重新构建发布，确认产物里是 `/assets/...`。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
-
-### Q21：`Enforce HTTPS` 一直是灰的 / 报 `The certificate does not exist yet`？
-
-多半是 Cloudflare 开了**橙云代理**，GitHub 看不到指向 `用户名.github.io` 的 CNAME，签不出证书。把该记录改成 **DNS only（灰云）** 等证书签发；保留橙云则把 SSL/TLS 模式设为 **Full**（别用 Flexible）。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
-
-### Q22：为什么还要加一条 TXT 记录？
-
-GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a domain）验证域名所有权，防止域名被别人抢绑。验证父域后其直接子域自动受保护，TXT 记录要一直保留。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
-
 ## 前台显示与文案（v1.1）
 
-### Q23：后台改了首页文案 / 分类名，前台还是旧的？
+### Q18：后台改了首页文案 / 分类名，前台还是旧的？
 
 按这个顺序查：
 
@@ -128,7 +104,7 @@ GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a do
 4. **数据源**：看页面 `<html>` 上的 `data-api-source` 属性，若为 `static` 说明没连上 API，走的是静态兜底数据，后台改动自然不生效。
 5. **改对了字段没有**：「站点名称」只管顶栏品牌；想改首屏大字要改「首页主标题」，改导语要改「首页副标题」，改「在售」区大标题要改「商品区标题」。详见 [站点设置与其他](/admin/settings)。
 
-### Q24：商品「已知不足」在哪里填？为什么前台不显示？
+### Q19：商品「已知不足」在哪里填？为什么前台不显示？
 
 后台「编辑商品」表单底部的「商品缺点 / 已知不足」多行框，每行一条。前台商品详情页会逐条展示；**留空则整栏自动隐藏**，这是正常行为。
 
@@ -136,7 +112,7 @@ GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a do
 
 ## 开发者 · 主题定制
 
-### Q25：改了 `style.css` 的主题色，页面却没变化？
+### Q20：改了 `style.css` 的主题色，页面却没变化？
 
 按这个顺序查：
 
@@ -150,7 +126,7 @@ GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a do
 
 变量清单、换色示例、主题切换原理见 [主题定制设置](/developer/theme)。改 PHP 侧文案默认值不生效，见 [PHP 配置与文案默认值](/developer/config)。
 
-### Q26：自己加的接口 / 页面，升级后没了，或新接口报 404？
+### Q21：自己加的接口 / 页面，升级后没了，或新接口报 404？
 
 - **升级会覆盖**：从 Release 整目录覆盖时 `public/api/index.php`、`style.css`、各 HTML 都会还原成官方版本。定制要整理成补丁，每次升级后重新套用，见 [09 安全规范与发布检查](/developer/custom/security)。
 - **新接口 404**：路由 case 没匹配（顺序被前面的正则抢了），或末尾 `$known` 数组没同步加 —— 方法写错时会返回 404 而不是 405。见 [03 基础 API](/developer/custom/api)。
