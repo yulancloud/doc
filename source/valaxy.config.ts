@@ -19,6 +19,7 @@ export default defineValaxyConfig<ThemePressConfig>({
       { text: '欲蓝财务魔方', link: '/yulan' },
       { text: 'Windows APP', link: '/windows-app' },
       { text: '故障排查', link: '/troubleshoot' },
+      { text: '开发者', link: '/developer' },
       { text: '常见问题', link: '/faq' },
     ],
     sidebar: {
@@ -62,6 +63,15 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '欲蓝财务魔方', link: '/yulan' },
             { text: 'Windows APP', link: '/windows-app' },
             { text: '常见问题', link: '/faq' },
+          ],
+        },
+        {
+          text: '开发者 · 主题与配置',
+          collapsed: false,
+          items: [
+            { text: '开发者总览', link: '/developer' },
+            { text: '主题定制设置', link: '/developer/theme' },
+            { text: 'PHP 配置与文案默认值', link: '/developer/config' },
           ],
         },
         {

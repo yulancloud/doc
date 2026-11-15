@@ -134,4 +134,20 @@ GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a do
 
 填了但不显示，通常是：① 旧库没跑 `php bin/migrate.php`，`products.flaws` 列还不存在；② 浏览器缓存，需 `Ctrl+F5`。详见 [商品管理](/admin/products) 与 [版本更新](/changelog)。
 
+## 开发者 · 主题定制
+
+### Q25：改了 `style.css` 的主题色，页面却没变化？
+
+按这个顺序查：
+
+1. **没 bump 版本号**：所有 HTML 引用 `style.css?v=20261115a`，改了 CSS 不改 `?v=`，浏览器 / CDN 会继续用旧文件。在项目根目录执行
+   ```bash
+   find public -name '*.html' -print0 | xargs -0 sed -i 's/v=20261115a/v=你的新版本号/g'
+   ```
+2. **没强刷**：`Ctrl+F5` 或开无痕窗口；前面挂了 Cloudflare 等 CDN 时还要清一层缓存。
+3. **只改了亮色**：`[data-theme=dark]` 是独立一套，切到暗色会露出旧配色。颜色、字重、阴影相关变量要亮暗两处都改。
+4. **只改了 `--accent`**：`--accent-soft`（浅底）与 `--accent-ink`（浅底上的文字）要配套改，否则徽章、按钮仍是旧色系或文字看不清。
+
+变量清单、换色示例、主题切换原理见 [主题定制设置](/developer/theme)。改 PHP 侧文案默认值不生效，见 [PHP 配置与文案默认值](/developer/config)。
+
 > 完整的症状速查表与逐条处理见 [故障排查总览](/troubleshoot)；交付前请按 [上线自检清单](/deploy/checklist) 打勾。

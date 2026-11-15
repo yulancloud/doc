@@ -30,6 +30,9 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | `admin/settings.md` | 站点设置与其他 |
 | `yulan.md` / `windows-app.md` | 功能与配套 |
 | `faq.md` | 常见问题 |
+| `developer/index.md` | 开发者总览 |
+| `developer/theme.md` | 主题定制设置（CSS 变量 / 亮暗两套 / 版本号） |
+| `developer/config.md` | PHP 配置与文案默认值 |
 | `deploy/checklist.md` | 上线自检清单 |
 | `troubleshoot/index.md` | 故障排查总览（症状速查） |
 | `troubleshoot/deploy.md` | 部署与迁移故障 |

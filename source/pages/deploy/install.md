@@ -57,9 +57,9 @@ curl -i https://你的域名/api/health
 ## 四、升级步骤（老版本 → 新版本）
 
 ```text
-① 备份 data/shop.sqlite 与 config/.env
+① 备份整个 data/ 与 config/ 目录（含 .env 与 installed.lock）
       ↓
-② 上传新包覆盖（不要删 data/ 与 config/）
+② 上传新包覆盖程序文件（data/ 与整个 config/ 原样保留，不要删目录）
       ↓
 ③ php bin/migrate.php      ← 关键，自动修复旧库
       ↓
@@ -69,7 +69,21 @@ curl -i https://你的域名/api/health
 ```
 
 ::: warning
-升级包刻意排除了 `data/shop.sqlite*`、`config/.env`、`config/installed.lock`、日志与备份文件。直接整目录覆盖上传即可，但**千万别先把 `data/` 清空**，否则订单和用户数据全没了。
+**升级时 `config/` 文件夹整个都不要删，否则安装程序会重新出现。**
+
+`config/` 里不只有 `config/.env`，还有 **`config/installed.lock`（安装锁）** 与 `config/.install_token`。安装锁是「站点是否已安装」的唯一判据：只要它不在，`Installer::isInstalled()` 就判定为**未安装**，于是
+
+- **`/install` 安装向导重新出现** —— 这就是「装好的站升级完又冒出安装程序」的原因；
+- 全站 API 除 `/api/install`、`/api/health`、`/api/site` 外一律返回 **503「站点尚未安装，请先访问 /install 完成初始化」**，前台与后台都打不开；
+- `config/.env` 一起丢失，站点地址、易支付 PID / KEY 等配置全部回退到默认值。
+
+**这时千万别在向导里重新填一遍**：数据库还在、管理员账号还在，重新提交安装会往已有库里写，容易把店主账号覆盖掉。正确做法是从备份把**整个 `config/` 目录**恢复回来（至少恢复 `.env` 与 `installed.lock`），再 `Ctrl+F5` 验证。
+
+升级包本身已排除这些文件，所以只要别手动删目录、别用「先清空整个目录再上传」的方式覆盖，就不会踩到。各版本的升级要点见 [版本更新](/changelog)。
+:::
+
+::: warning
+同理**千万别先把 `data/` 清空**，否则订单、用户、余额数据全没了。升级包刻意排除了 `data/shop.sqlite*`、`config/.env`、`config/installed.lock`、日志与备份文件，直接整目录覆盖上传即可。
 :::
 
 ## 五、目录结构速查
@@ -81,7 +95,7 @@ curl -i https://你的域名/api/health
 | `database/` | Schema 与迁移定义 | ✅ |
 | `bin/migrate.php` | 迁移 / 修复工具 | ✅ |
 | `deploy/` | Nginx 配置样例 | ✅ |
-| `config/` | 运行配置（向导生成 `.env`、安装锁） | ❌ |
+| `config/` | 运行配置（向导生成 `.env`、安装锁 `installed.lock`） | ❌ **升级时必须整个保留** |
 | `data/` | SQLite 数据库、备份 | ❌ |
 
 ## 六、装完做什么

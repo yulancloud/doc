@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg">
+    <script>
+    ;(function () {
+      const prefersDark =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
+      if (setting === 'dark' || (prefersDark && setting !== 'light'))
+        document.documentElement.classList.toggle('dark', true)
+    })()
+    </script>
+  <style type="text/css">
+    :root { color-scheme: light dark; --va-c-bg: #fff; }
+    html.dark { --va-c-bg: #000; }
+    html { background-color: var(--va-c-bg); }
+  </style><style id="valaxy-fouc">body{margin:0;opacity:0!important}</style><noscript><style>body{opacity:1!important}</style></noscript><script>(function foucGuardScript(maxDuration) {
+  var done = 0;
+  var observer = new MutationObserver(check);
+  var timer = maxDuration ? setTimeout(reveal, maxDuration) : void 0;
+  function reveal() {
+    if (done) return;
+    done = 1;
+    observer.disconnect();
+    clearTimeout(timer);
+    document.removeEventListener("load", check, true);
+    removeEventListener("load", reveal);
+    var s = document.getElementById("valaxy-fouc");
+    if (s) s.remove();
+  }
+  function check() {
+    if (!document.body) return;
+    var links = document.head.querySelectorAll('link[rel~="stylesheet"]');
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      if (!link.disabled && !link.sheet) return;
+    }
+    reveal();
+  }
+  observer.observe(document.documentElement, { childList: true });
+  observer.observe(document.head, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["media", "rel", "disabled"]
+  });
+  document.addEventListener("load", check, true);
+  addEventListener("load", reveal);
+})(5000)</script>
+    <script>
+    const locale = localStorage.getItem('valaxy-locale') || 'zh-CN';
+    document.documentElement.setAttribute('lang', locale);
+    </script>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="欲蓝财务商城官方文档教程">
+  <script type="module" crossorigin src="/assets/index.CCQHAQxU.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime.XKyaHtl9.js">
+  <link rel="modulepreload" crossorigin href="/assets/framework.B-addatH.js">
+  <link rel="modulepreload" crossorigin href="/assets/chunks/vue-router.doy9MGWW.js">
+  <link rel="modulepreload" crossorigin href="/assets/dist.DM0eLDtm.js">
+  <link rel="modulepreload" crossorigin href="/assets/chunks/dayjs.fm8t91fl.js">
+  <link rel="modulepreload" crossorigin href="/assets/chunks/vue-i18n.0DEHNsn9.js">
+  <link rel="modulepreload" crossorigin href="/assets/vue.DKb5ZKVl.DNf8Aq1E.js">
+  <link rel="modulepreload" crossorigin href="/assets/chunks/pinia.Bh4BHTOu.js">
+  <link rel="modulepreload" crossorigin href="/assets/client.D-U7oj_b.js">
+  <link rel="modulepreload" crossorigin href="/assets/DropdownMenuTrigger.7569FVKe.js">
+  <link rel="modulepreload" crossorigin href="/assets/AppLink.BZEWk0A2.js">
+  <link rel="modulepreload" crossorigin href="/assets/chunks/nprogress.BxnaRx5o.js">
+  <link rel="stylesheet" crossorigin href="/assets/style.BQ9kighM.css">
+</head>
+<body>
+  <div id="app"></div>
+  <div id="valaxy-teleports"></div>
+  
+
+</body>
+</html>

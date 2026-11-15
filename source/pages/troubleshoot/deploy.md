@@ -95,9 +95,9 @@ SQLite 的 `ALTER TABLE products RENAME TO __products_old` 在默认 `legacy_alt
 ## 升级后页面没变化
 
 - 浏览器强缓存：`Ctrl+F5`，或开无痕窗口验证
-- 前端资源用 `?v=20261114i` 做缓存破坏，覆盖文件时确认 `public/admin/index.html` 等引用也一起更新了
+- 前端资源用 `?v=20261115a` 做缓存破坏，覆盖文件时确认 `public/admin/index.html` 等引用也一起更新了
 - 服务端 PHP 若开了 OPcache，重启 PHP-FPM 或等缓存过期
-- 最终判据：`curl https://域名/api/health` 返回的 `build` 是否为 `20261114i`
+- 最终判据：`curl https://域名/api/health` 返回的 `build` 是否为 `20261115a`
 
 `public/router.php` 对首页 HTML 与接口统一发 `no-store`，正常情况下改完就能拿到新版；静态资源才走长缓存。
 
@@ -113,6 +113,7 @@ SQLite 的 `ALTER TABLE products RENAME TO __products_old` 在默认 `legacy_alt
 | --- | --- |
 | 迁移脚本报只读 / 无法写库 | `data/` 目录属主是否为 PHP-FPM 运行用户，是否可写 |
 | 安装向导打不开、提示已安装 | `config/installed.lock` 是否存在；全新安装需删除它（同时确认数据库为空） |
+| 升级后 `/install` 又冒出安装向导 / 全站 503「站点尚未安装」 | 升级时误删了整个 `config/`，`config/installed.lock` 安装锁丢失。从备份恢复 `config/` 目录，**别在向导里重装**（会覆盖店主账号），见 [安装与升级](/deploy/install) |
 | 重装后接口全被拒 | 未安装状态下，路由只放行 `/api/install`、`/api/health`、`/api/site`、`/api/install/status` |
 | 配置改了不生效 | `config/.env` 是否被覆盖 / 环境变量未生效；配置集中在 `config/config.php`，默认从环境变量读取 |
 

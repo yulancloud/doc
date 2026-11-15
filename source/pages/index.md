@@ -23,6 +23,8 @@ features:
     details: 单文件 exe，免环境、仅管理员可运行、日志隔离、自动 UAC 提权
   - title: 按症状查故障
     details: 部署、迁移、支付、建号、域名与证书的真实踩坑记录，附上线自检清单
+  - title: 开发者 · 主题定制
+    details: CSS 变量换主色与亮暗配色、PHP 侧文案默认值与业务参数，附新增可配字段步骤
 ---
 
 ## 从这里开始
@@ -40,6 +42,8 @@ features:
 | 配欲蓝服务器 | [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app) |
 | 上线前逐项打勾 | [上线自检清单](/deploy/checklist) |
 | 看每个版本改了什么 | [版本更新](/changelog) |
+| 换主题配色、改 CSS 变量 | [主题定制设置](/developer/theme) |
+| 改 PHP 默认文案 / 业务参数、新增可配字段 | [PHP 配置与文案默认值](/developer/config) |
 | 报错了不知道为什么 | [故障排查总览](/troubleshoot)（按症状速查） |
 
 > 部署完成建议按 [上线自检清单](/deploy/checklist) 走一遍；遇到「服务暂时不可用」这类提示，先看 [排查总览](/troubleshoot) 的三步定位法，真实错误在浏览器 Network 响应体里。

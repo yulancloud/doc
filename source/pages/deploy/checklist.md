@@ -12,7 +12,7 @@ title: 上线自检清单
 2. **备份原程序目录**（或打一个 zip），记录当前版本号。
 3. **确认回滚方案**：知道备份在哪、怎么恢复、回滚后是否要重跑迁移。
 
-> 覆盖文件时**只覆盖程序文件，不要删** `data/`、`config/.env`、`config/installed.lock`。删了 `installed.lock` 会让站点回到未安装状态。
+> 覆盖文件时**只覆盖程序文件，整个 `config/` 与 `data/` 目录都不要删**。删了 `config/installed.lock` 会让站点回到未安装状态：`/install` 安装向导重新出现、全站 API 返回 503「站点尚未安装」，`config/.env` 的支付参数也会一起丢失。见 [安装与升级](/deploy/install) 第四节。
 
 ## 二、覆盖与迁移
 
