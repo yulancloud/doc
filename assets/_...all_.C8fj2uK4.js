@@ -1,0 +1,1 @@
+import{Ct as e,E as t,U as n,qt as r,x as i}from"./framework.B-addatH.js";import{n as a}from"./chunks/vue-i18n.0DEHNsn9.js";import{t as o}from"./route-block.ChiJXsfH.js";var s=t({__name:`[...all]`,setup(t){let{t:o}=a();return(t,a)=>(n(),i(`div`,null,r(e(o)(`not-found`)),1))}});typeof o==`function`&&o(s);var c=s;export{c as default};

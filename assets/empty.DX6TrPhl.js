@@ -1,1 +1,0 @@
-import{J as e,U as t,t as n,y as r}from"./framework.DkEY7LKJ.js";var i={};function a(n,i){let a=e(`RouterView`);return t(),r(a)}var o=n(i,[[`render`,a]]);export{o as default};

@@ -5,11 +5,11 @@ export default defineValaxyConfig<ThemePressConfig>({
   siteConfig: {
     title: '欲蓝财务',
     description: '欲蓝财务商城官方文档教程',
-    url: 'https://yulancloud.github.io/doc',
+    url: 'https://doc.yulancloud.us.ci',
     lang: 'zh-CN',
   },
   vite: {
-    base: '/doc/',
+    base: '/',
   },
   theme: 'valaxy-theme-press',
   themeConfig: {

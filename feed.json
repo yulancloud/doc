@@ -1,8 +1,8 @@
 {
     "version": "https://jsonfeed.org/version/1",
     "title": "欲蓝财务",
-    "home_page_url": "https://yulancloud.github.io/doc/",
-    "feed_url": "https://yulancloud.github.io/doc/feed.json",
+    "home_page_url": "https://doc.yulancloud.us.ci/",
+    "feed_url": "https://doc.yulancloud.us.ci/feed.json",
     "description": "欲蓝财务商城官方文档教程",
     "icon": "https://valaxy.site/valaxy-logo.png",
     "author": {

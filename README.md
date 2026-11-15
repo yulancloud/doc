@@ -1,6 +1,9 @@
 # 欲蓝财务 · 官方文档
 
-线上站点： https://yulancloud.github.io/doc/
+线上站点： https://doc.yulancloud.us.ci/ （原 yulancloud.github.io/doc/ 会自动跳转）
+
+自定义域名配置：仓库 `Settings → Pages → Custom domain` 填 `doc.yulancloud.us.ci`，
+DNS 侧用 CNAME 把 `doc` 指向 `yulancloud.github.io`。根目录的 `CNAME` 文件由本脚本自动写入，请勿删除。
 
 本仓库 `main` 分支根目录即 GitHub Pages 部署产物（`dist/`），**请勿手动编辑根目录下的 html/js/css**。
 

@@ -94,6 +94,8 @@ APP 与商城服务端之间为明文 HTTP，**请勿将 APP 暴露到公网**�
 
 ## 文档站
 
-### Q18：文档站地址为什么是 yulancloud.github.io/doc？
+### Q18：文档站的正式访问地址是什么？
 
-GitHub Pages 免费方案只提供 `<用户>.github.io/<仓库>` 形式。若要 `doc.yulancloud.github.io` 这类子域名，需自行购买域名并在仓库 Settings → Pages 配置自定义域名。
+正式地址是 **https://doc.yulancloud.us.ci/**，站点仍由 GitHub Pages 托管，只是绑定了自定义域名。原来的 `yulancloud.github.io/doc/` 会自动跳转到这个域名，建议收藏新地址。
+
+自定义域名在仓库 `Settings → Pages → Custom domain` 中设置，DNS 侧用一条 CNAME 把 `doc` 指向 `yulancloud.github.io`。
