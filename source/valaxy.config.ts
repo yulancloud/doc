@@ -34,7 +34,7 @@ export default defineValaxyConfig<ThemePressConfig>({
       ],
     },
     editLink: {
-      pattern: 'https://github.com/yulancloud/doc/edit/main/:path',
+      pattern: 'https://github.com/yulancloud/doc/edit/main/source/:path',
       text: '编辑本页',
     },
     socialLinks: [
