@@ -1,5 +1,7 @@
 # 欲蓝财务 · 官方文档
 
+> 当前文档对应系统 **v1.1.0**（健康检查 `build=20261115a`）。版本变化见 [`changelog.md`](source/pages/changelog.md)。
+
 线上站点： https://doc.yulancloud.us.ci/ （原 yulancloud.github.io/doc/ 会自动跳转）
 
 自定义域名配置：仓库 `Settings → Pages → Custom domain` 填 `doc.yulancloud.us.ci`，
@@ -14,6 +16,7 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | 路径 | 内容 |
 | --- | --- |
 | `index.md` | 首页 |
+| `changelog.md` | 版本更新（各版本变化与升级要点） |
 | `deploy/index.md` | 部署总览与选型 |
 | `deploy/prepare.md` | 部署前准备 |
 | `deploy/nginx.md` | Nginx 部署（需伪静态） |

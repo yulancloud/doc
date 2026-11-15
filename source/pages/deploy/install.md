@@ -37,7 +37,7 @@ php bin/migrate.php
 
 这个脚本是**幂等**的，可重复执行，负责：
 
-- 补齐新增列（含商品级服务器配置 5 列）
+- 补齐新增列（含商品级服务器配置 5 列、v1.1 的商品缺点 `products.flaws`）
 - 修正 `order_deliveries.kind` 的 CHECK 约束，加入 `yulan`
 - 修复旧库在 `ALTER TABLE RENAME` 时被子表外键指向 `__products_old` 的损坏（自动重建子表并搬回数据）
 - 兜底 `created_at` / `updated_at` 的 NULL 值
@@ -50,9 +50,9 @@ php bin/migrate.php
 curl -i https://你的域名/api/health
 ```
 
-期望返回 JSON，其中 `build` 为当前版本号（如 `20261114i`）。
+期望返回 JSON，其中 `build` 为当前版本号（v1.1.0 为 `20261115a`）。
 
-然后浏览器 **Ctrl+F5** 强刷后台，确认菜单、商品类型下拉框等新界面生效。系统对 JS / CSS / HTML 用协商缓存（`no-cache` + `Last-Modified`），正常改动会自动拿新版本，但升级后强刷一次最稳。
+然后浏览器 **Ctrl+F5** 强刷后台与前台，确认菜单、商品类型下拉框、商品缺点输入框、分类标签与首页文案等新界面生效。系统对 JS / CSS / HTML 用协商缓存（`no-cache` + `Last-Modified`），正常改动会自动拿新版本，但升级后强刷一次最稳。
 
 ## 四、升级步骤（老版本 → 新版本）
 
@@ -92,5 +92,7 @@ curl -i https://你的域名/api/health
 - 用欲蓝财务魔方，见 [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app)
 
 ## 相关排查
+
+各版本的变化与升级要点见 [版本更新](/changelog)。
 
 迁移漏跑导致「加载失败」、旧库外键损坏导致保存 500 的处理，见 [部署与迁移故障](/troubleshoot/deploy)；完整验收项见 [上线自检清单](/deploy/checklist)。

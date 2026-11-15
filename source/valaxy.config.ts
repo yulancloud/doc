@@ -30,6 +30,7 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '首页', link: '/' },
             { text: '部署总览', link: '/deploy' },
             { text: '部署前准备', link: '/deploy/prepare' },
+            { text: '版本更新', link: '/changelog' },
           ],
         },
         {

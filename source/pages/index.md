@@ -39,6 +39,7 @@ features:
 | 配置在线支付 | [支付配置](/admin/payment) |
 | 配欲蓝服务器 | [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app) |
 | 上线前逐项打勾 | [上线自检清单](/deploy/checklist) |
+| 看每个版本改了什么 | [版本更新](/changelog) |
 | 报错了不知道为什么 | [故障排查总览](/troubleshoot)（按症状速查） |
 
 > 部署完成建议按 [上线自检清单](/deploy/checklist) 走一遍；遇到「服务暂时不可用」这类提示，先看 [排查总览](/troubleshoot) 的三步定位法，真实错误在浏览器 Network 响应体里。
