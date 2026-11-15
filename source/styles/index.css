@@ -1,0 +1,25 @@
+/* 站内搜索弹窗：主题把这几处文案写死成英文且样式 scoped，
+   这里用项目级样式覆盖为中文（!important 用于压过 scoped 的优先级）。
+   按钮标题 / 输入占位符 / 结果条数走 i18n，lang=zh-CN 时本就是中文。 */
+
+/* 空结果 */
+.press-search-empty-text { font-size: 0 !important; }
+.press-search-empty-text::after {
+  content: '未找到相关结果';
+  font-size: 15px;
+}
+.press-search-empty-subtext { font-size: 0 !important; }
+.press-search-empty-subtext::after {
+  content: '请尝试调整搜索关键词';
+  font-size: 13px;
+}
+
+/* 页脚出处 */
+.press-search-powered-by { font-size: 0 !important; }
+.press-search-powered-by::after {
+  content: '本地全文搜索';
+  font-size: 12px;
+}
+
+/* 结果卡片里的 refIndex 是调试信息，对外站点不必展示 */
+.press-result-score { display: none !important; }

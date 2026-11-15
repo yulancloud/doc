@@ -8,6 +8,8 @@
 
 本仓库 `main` 分支根目录即 GitHub Pages 部署产物（`dist/`），**请勿手动编辑根目录下的 html/js/css**。
 
+站内搜索：`valaxy.config.ts` 中 `siteConfig.search` 已开启本地 fuse 全文检索；搜索索引 `valaxy-fuse-list.json` 由 `npm run build` 自动生成（含正文全文），弹窗文案的中文覆盖见 `styles/index.css`。
+
 ## 修改文档
 
 Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：

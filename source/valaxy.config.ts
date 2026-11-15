@@ -7,6 +7,31 @@ export default defineValaxyConfig<ThemePressConfig>({
     description: '欲蓝财务商城官方文档教程',
     url: 'https://doc.yulancloud.us.ci',
     lang: 'zh-CN',
+
+    // 站内搜索：本地 fuse.js 全文检索，纯前端、无需任何外部服务。
+    // 主题默认 search.enable=false，不显式打开的话导航栏搜索框根本不渲染。
+    search: {
+      enable: true,
+      provider: 'fuse',
+    },
+    fuse: {
+      options: {
+        // keys 必须写成字符串数组：Valaxy 生成索引时用
+        // keys.includes('content') 判断是否把正文全文写入 valaxy-fuse-list.json，
+        // 写成 {name, weight} 对象数组会导致正文不入索引（只搜得到标题和开头 100 字）。
+        keys: ['title', 'tags', 'categories', 'excerpt', 'content'],
+        includeMatches: true,
+        findAllMatches: true,
+        // 中文长正文不能只匹配开头：fuse 默认 location=0/distance=100，
+        // 不开 ignoreLocation 的话正文中后段的词几乎搜不到。
+        ignoreLocation: true,
+        // 中文按字符模糊匹配：阈值过高（0.4）会把无关词也误报成命中，
+        // 实测 0.3 下「伪静态 / fastcgi_pass / 商品缺点 / 迁移」等真实词全部命中，
+        // 且不会为已无对应内容的词凭空造出结果；minMatchCharLength 过滤单字噪音
+        threshold: 0.3,
+        minMatchCharLength: 2,
+      },
+    },
   },
   vite: {
     base: '/',
