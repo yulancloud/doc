@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://yulancloud.github.io/doc/</id>
+    <title>欲蓝财务</title>
+    <updated>2026-11-15T03:00:26.597Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <author>
+        <name>VALAXY Developer</name>
+    </author>
+    <link rel="alternate" href="https://yulancloud.github.io/doc/"/>
+    <link rel="self" href="https://yulancloud.github.io/doc/atom.xml"/>
+    <subtitle>欲蓝财务商城官方文档教程</subtitle>
+    <logo>https://valaxy.site/valaxy-logo.png</logo>
+    <icon>https://yulancloud.github.io/doc/favicon.svg</icon>
+    <rights>CC BY-NC-SA 4.0 2026 © VALAXY Developer</rights>
+</feed>
