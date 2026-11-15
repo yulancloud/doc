@@ -57,7 +57,7 @@ title: 故障排查总览
 | 建号成功但角色不对 | `admin_products` 商品 ID 没配对 | [Windows APP 故障](/troubleshoot/app) |
 | 日志里出现明文密码 | 旧版本掩码缺陷，升级到 Go 版 exe | [Windows APP 故障](/troubleshoot/app) |
 
-### 文档站、域名与仓库
+### 文档站、域名与 HTTPS
 
 | 你看到的 | 最可能的原因 | 去哪看 |
 | --- | --- | --- |
@@ -67,8 +67,6 @@ title: 故障排查总览
 | 反复重定向 / 证书错误 | Cloudflare SSL 模式设成了 Flexible | [域名与 HTTPS 故障](/troubleshoot/domain) |
 | 「编辑此页」跳 404 | 编辑链接指向了框架官方仓库 | [域名与 HTTPS 故障](/troubleshoot/domain) |
 | 子页面分享链接 404 | 只生成了首页 HTML，缺深链静态页 | [域名与 HTTPS 故障](/troubleshoot/domain) |
-| `git push` 403 / Resource not accessible by personal access token | token 没有 Contents 写权限 | [仓库与发布故障](/troubleshoot/repo) |
-| git 报 TLS 连接中断 | 出网代理掐断 GnuTLS | [仓库与发布故障](/troubleshoot/repo) |
 
 ## 分册导航
 
@@ -76,5 +74,4 @@ title: 故障排查总览
 - [后台与业务故障](/troubleshoot/backend) —— 真实报错文案逐条对照
 - [Windows APP 故障](/troubleshoot/app) —— 建号端连不通 / 建号失败
 - [自定义域名与 HTTPS 故障](/troubleshoot/domain) —— GitHub Pages 绑定与证书
-- [GitHub 仓库与发布故障](/troubleshoot/repo) —— token、推送、敏感文件
 - [上线自检清单](/deploy/checklist) —— 交付前逐项打勾

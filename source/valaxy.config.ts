@@ -72,7 +72,6 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '后台与业务故障', link: '/troubleshoot/backend' },
             { text: 'Windows APP 故障', link: '/troubleshoot/app' },
             { text: '域名 / HTTPS / 文档站', link: '/troubleshoot/domain' },
-            { text: 'GitHub 仓库与发布', link: '/troubleshoot/repo' },
           ],
         },
       ],

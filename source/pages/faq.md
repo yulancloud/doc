@@ -116,12 +116,4 @@ DNS 通了但仓库没绑定 `Custom domain`。GitHub 按 `Host` 头分发站点
 
 GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a domain）验证域名所有权，防止域名被别人抢绑。验证父域后其直接子域自动受保护，TXT 记录要一直保留。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
 
-### Q23：`git push` 403 / 上传代码写不进去？
-
-细粒度 token 没开 `Contents: Read and Write`，或 git 的 HTTPS 被出网代理掐断。前者改用只勾 `repo` 的 classic PAT，后者走 GitHub Git Database API。见 [仓库与发布故障](/troubleshoot/repo)。
-
-### Q24：公开仓库会不会泄露数据库和密钥？
-
-上传前用 `.gitignore` 挡住 `data/shop.sqlite*`、备份、`config/.env`、`installed.lock`、APP 日志，并用 `git diff --cached --name-only` 与远程 tree 各复查一次。`config/config.php` 默认从环境变量读取、不含真实密钥，可以入库。见 [仓库与发布故障](/troubleshoot/repo)。
-
 > 完整的症状速查表与逐条处理见 [故障排查总览](/troubleshoot)；交付前请按 [上线自检清单](/deploy/checklist) 打勾。
