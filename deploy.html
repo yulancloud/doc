@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>部署教程 · 欲蓝财务</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">欲蓝财务</div>
+  <nav>
+    <a href="index.html">首页</a>
+    <a href="deploy.html">部署教程</a>
+    <a href="yulan.html">欲蓝财务魔方</a>
+    <a href="windows-app.html">Windows APP</a>
+    <a href="faq.html">常见问题</a>
+  </nav>
+</div>
+<div class="wrap">
+  <h1>部署教程</h1>
+  <p>以 Nginx（宝塔面板）为例，完成运行目录、伪静态、PHP 解析与安装。</p>
+
+  <h2>一、环境要求</h2>
+  <ul>
+    <li>PHP <strong>8.1+</strong>（8.3 已验证），开启 <code>pdo_sqlite</code> 扩展</li>
+    <li>Nginx / Apache 均可</li>
+    <li>运行目录必须指向项目下的 <code>public/</code></li>
+  </ul>
+
+  <h2>二、设置运行目录</h2>
+  <p>将网站「运行目录 / 网站根目录 / 执行目录」指向项目下的 <code>public</code> 目录：</p>
+  <pre><code>/www/wwwroot/你的域名/public</code></pre>
+  <div class="warn note">不要把根目录当作网站根目录，否则 <code>src/</code>、<code>config/</code>、<code>data/</code> 等敏感目录会被直接暴露。</div>
+
+  <h2>三、Nginx 伪静态</h2>
+  <p>在站点伪静态规则中填入以下内容（已验证）：</p>
+  <pre><code>location /api/ {
+    try_files $uri /api/index.php$is_args$args;
+}
+location ~ ^/(admin|console|install)$ {
+    rewrite ^/(.*)$ /$1/ permanent;
+}
+location = /install/ {
+    try_files /install.html =404;
+}
+location ^~ /admin/ {
+    try_files $uri $uri/ /admin/index.html =404;
+}
+location ^~ /console/ {
+    try_files $uri $uri/ /console/index.html =404;
+}</code></pre>
+
+  <h2>四、PHP 解析（fastcgi）</h2>
+  <pre><code>location ~ \.php$ {
+    fastcgi_pass unix:/tmp/php-cgi-83.sock;   # 宝塔默认路径，按实际 PHP 版本修改
+    fastcgi_index index.php;
+    include fastcgi.conf;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}</code></pre>
+
+  <h2>五、安装与升级</h2>
+  <ol>
+    <li>上传代码，运行目录指向 <code>public/</code>，配置好伪静态与 PHP。</li>
+    <li>浏览器访问 <code>/install</code> 完成初始化（创建管理员账号、写配置文件）。</li>
+    <li><strong>首次部署或升级后务必执行一次数据库迁移：</strong>
+        <pre><code>php bin/migrate.php</code></pre>
+        该脚本会加新列、修复 SQLite 外键、确保各项修复生效（幂等，可重复执行）。</li>
+    <li><code>Ctrl+F5</code> 强刷清缓存，访问 <code>/api/health</code> 确认返回 <code>build</code> 版本号正常。</li>
+  </ol>
+
+  <h2>六、目录结构</h2>
+  <table>
+    <tr><th>路径</th><th>说明</th></tr>
+    <tr><td><code>public/</code></td><td>网站根目录（运行目录），含 router.php、前端页面、API 入口</td></tr>
+    <tr><td><code>src/</code></td><td>后端业务逻辑（支付、订单、欲蓝连接器等）</td></tr>
+    <tr><td><code>database/</code></td><td>Schema 与迁移脚本</td></tr>
+    <tr><td><code>bin/migrate.php</code></td><td>数据库迁移 / 修复工具</td></tr>
+    <tr><td><code>config/</code></td><td>运行配置（由安装向导生成，不参与版本库）</td></tr>
+    <tr><td><code>data/</code></td><td>SQLite 数据库（运行生成，不参与版本库）</td></tr>
+  </table>
+
+  <p style="margin-top:30px"><a href="index.html">← 返回首页</a> · <a href="yulan.html">下一步：欲蓝财务魔方配置 →</a></p>
+</div>
+<footer>欲蓝财务 · 文档教程 · 由 GitHub Pages 托管</footer>
+</body>
+</html>

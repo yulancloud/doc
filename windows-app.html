@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Windows APP · 欲蓝财务</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">欲蓝财务</div>
+  <nav>
+    <a href="index.html">首页</a>
+    <a href="deploy.html">部署教程</a>
+    <a href="yulan.html">欲蓝财务魔方</a>
+    <a href="windows-app.html">Windows APP</a>
+    <a href="faq.html">常见问题</a>
+  </nav>
+</div>
+<div class="wrap">
+  <h1>Windows APP（建号端）</h1>
+  <p>欲蓝商品下单后，由这台 Windows APP 在目标服务器上自动建号。它是用 Go 编译的<strong>单文件 exe</strong>，无需安装 Python 或任何运行时。</p>
+
+  <h2>一、下载</h2>
+  <p>前往 <a href="https://github.com/yulancloud/yulancloudRubik-Windows/releases" target="_blank" rel="noopener">yulancloudRubik-Windows 仓库 Release</a> 下载 <code>yulan_cube_app.exe</code>。</p>
+
+  <h2>二、以管理员运行</h2>
+  <p>APP 仅允许<strong>管理员账号</strong>运行，其他用户完全看不到运行日志（日志 ACL 隔离为 SYSTEM / Administrators）。双击 <code>run_as_admin.bat</code> 会自动触发 UAC 提权；也可右键 exe →「以管理员身份运行」。</p>
+
+  <h2>三、配置示例</h2>
+  <p><code>yulan_cube_config.json</code>：</p>
+  <pre><code>{
+  "listen_host": "127.0.0.1",
+  "listen_port": 8088,
+  "token": "你的服务端通信令牌",
+  "default_role": "admin",
+  "admin_products": ["yulan"],
+  "admin_group_name": "yulan-admins",
+  "rdp_group_name": "yulan-rdp",
+  "server_ip": "10.0.0.5",
+  "use_powershell": false
+}</code></pre>
+  <div class="warn note">务必将 <code>listen_host</code> 设为 <code>127.0.0.1</code> 或仅内网可达地址，<strong>不要</strong>暴露到公网——通信为明文 HTTP，公网暴露会泄露令牌与建号口令。</div>
+
+  <h2>四、接口（供商城服务端调用）</h2>
+  <table>
+    <tr><th>接口</th><th>说明</th></tr>
+    <tr><td><code>GET /api/v1/health</code></td><td>健康检查，返回版本与监听状态</td></tr>
+    <tr><td><code>POST /api/v1/create-user</code></td><td>建号（Header <code>Authorization: Bearer &lt;token&gt;</code>）</td></tr>
+  </table>
+
+  <h2>五、特性</h2>
+  <ul>
+    <li>单文件 exe，免环境（Go 编译，6.7MB）</li>
+    <li>管理员门禁：非管理员无法运行</li>
+    <li>日志隔离：运行日志仅 SYSTEM / Administrators 可读</li>
+    <li>自动 UAC 提权（run_as_admin.bat）</li>
+    <li>令牌常量时间比较，防时序攻击</li>
+    <li>建号命令参数化执行（<code>net user</code>），无命令注入</li>
+  </ul>
+
+  <p style="margin-top:30px"><a href="yulan.html">← 返回欲蓝财务魔方</a> · <a href="faq.html">常见问题 →</a></p>
+</div>
+<footer>欲蓝财务 · 文档教程 · 由 GitHub Pages 托管</footer>
+</body>
+</html>

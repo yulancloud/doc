@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>常见问题 · 欲蓝财务</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">欲蓝财务</div>
+  <nav>
+    <a href="index.html">首页</a>
+    <a href="deploy.html">部署教程</a>
+    <a href="yulan.html">欲蓝财务魔方</a>
+    <a href="windows-app.html">Windows APP</a>
+    <a href="faq.html">常见问题</a>
+  </nav>
+</div>
+<div class="wrap">
+  <h1>常见问题</h1>
+
+  <h2>Q1：访问后台提示「加载失败，服务暂时不可用」？</h2>
+  <p>通常是<strong>部署后没有执行数据库迁移</strong>，新列不存在导致接口报错。请运行 <code>php bin/migrate.php</code>，再 <code>Ctrl+F5</code> 清缓存后重试。迁移脚本幂等，可重复执行。</p>
+
+  <h2>Q2：保存商品 / 设置提示「服务暂时不可用」？</h2>
+  <p>多为旧数据库在迁移时外键子表未正确重建所致。最新迁移脚本已内置自动修复（<code>repairChildTablesAfterRename</code>），执行 <code>php bin/migrate.php</code> 即可自愈；若仍失败，检查 <code>data/</code> 目录可写权限。</p>
+
+  <h2>Q3：支付回调会被伪造吗？</h2>
+  <p>不会。异步回调严格验签（<code>hash_equals</code> 常量时间比较、签名算法取自服务端配置不可降级），并校验状态 / 通道 / 金额完全相等与幂等，无法伪造支付成功。</p>
+
+  <h2>Q4：是否存在 SQL 注入 / 命令注入？</h2>
+  <p>后端全参数化查询（排序 / 状态走白名单）；Windows APP 建号使用参数化命令执行（不经过 shell），账号还做了白名单校验，无注入风险。</p>
+
+  <h2>Q5：Windows APP 的通信安全吗？</h2>
+  <p>APP 与商城服务端之间为明文 HTTP，<strong>请勿将 APP 暴露到公网</strong>，应部署在内网或将 <code>listen_host</code> 设为 <code>127.0.0.1</code>。令牌与建号口令仅在内部网络传输。</p>
+
+  <h2>Q6：服务器口令会回显吗？</h2>
+  <p>不会。商品级服务器口令「只写不读」，API 响应中根本不包含该字段；管理后台也仅显示「已配置」状态徽标。</p>
+
+  <h2>Q7：升级后前端没变化？</h2>
+  <p>浏览器强缓存所致。请 <code>Ctrl+F5</code> 强刷；系统对 JS / CSS / HTML 采用协商缓存，正常情况下改动后会自动拿到新版本。</p>
+
+  <h2>Q8：文档站地址为什么是 yulancloud.github.io/doc？</h2>
+  <p>GitHub Pages 免费方案只提供 <code>&lt;用户&gt;.github.io/&lt;仓库&gt;</code> 形式。若要 <code>doc.yulancloud.github.io</code> 这类子域名，需自行购买域名并在仓库 Settings → Pages 配置自定义域名。</p>
+
+  <p style="margin-top:30px"><a href="windows-app.html">← 返回 Windows APP</a> · <a href="index.html">返回首页 →</a></p>
+</div>
+<footer>欲蓝财务 · 文档教程 · 由 GitHub Pages 托管</footer>
+</body>
+</html>
