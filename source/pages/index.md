@@ -25,6 +25,8 @@ features:
     details: 部署、迁移、支付、建号、域名与证书的真实踩坑记录，附上线自检清单
   - title: 开发者 · 主题定制
     details: CSS 变量换主色与亮暗配色、PHP 侧文案默认值与业务参数，附新增可配字段步骤
+  - title: 开发者 · 功能自定义教程
+    details: 从入门、框架结构、基础 API 到实战做功能、后台前台扩展与发布检查，10 篇循序渐进
 ---
 
 ## 从这里开始
@@ -42,6 +44,7 @@ features:
 | 配欲蓝服务器 | [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app) |
 | 上线前逐项打勾 | [上线自检清单](/deploy/checklist) |
 | 看每个版本改了什么 | [版本更新](/changelog) |
+| 做二次开发、加新功能 | [功能自定义 · 学习路线](/developer/custom)（10 篇教程） |
 | 换主题配色、改 CSS 变量 | [主题定制设置](/developer/theme) |
 | 改 PHP 默认文案 / 业务参数、新增可配字段 | [PHP 配置与文案默认值](/developer/config) |
 | 报错了不知道为什么 | [故障排查总览](/troubleshoot)（按症状速查） |

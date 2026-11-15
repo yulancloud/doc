@@ -33,6 +33,16 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | `developer/index.md` | 开发者总览 |
 | `developer/theme.md` | 主题定制设置（CSS 变量 / 亮暗两套 / 版本号） |
 | `developer/config.md` | PHP 配置与文案默认值 |
+| `developer/custom/index.md` | 功能自定义 · 学习路线（教程总览） |
+| `developer/custom/start.md` | 01 入门与本地环境 |
+| `developer/custom/architecture.md` | 02 框架结构与请求生命周期 |
+| `developer/custom/api.md` | 03 基础 API：路由、响应与鉴权 |
+| `developer/custom/database.md` | 04 数据库与迁移 |
+| `developer/custom/first-feature.md` | 05 实战：从零做一个完整功能 |
+| `developer/custom/admin.md` | 06 后台管理扩展 |
+| `developer/custom/frontend.md` | 07 前台数据流与交互 |
+| `developer/custom/payment.md` | 08 支付 / 发货 / 商品类型扩展 |
+| `developer/custom/security.md` | 09 安全规范与发布检查 |
 | `deploy/checklist.md` | 上线自检清单 |
 | `troubleshoot/index.md` | 故障排查总览（症状速查） |
 | `troubleshoot/deploy.md` | 部署与迁移故障 |

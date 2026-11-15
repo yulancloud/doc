@@ -66,12 +66,34 @@ export default defineValaxyConfig<ThemePressConfig>({
           ],
         },
         {
-          text: '开发者 · 主题与配置',
+          text: '开发者 · 定制与配置',
           collapsed: false,
           items: [
             { text: '开发者总览', link: '/developer' },
             { text: '主题定制设置', link: '/developer/theme' },
             { text: 'PHP 配置与文案默认值', link: '/developer/config' },
+            { text: '功能自定义 · 学习路线', link: '/developer/custom' },
+          ],
+        },
+        {
+          text: '功能自定义教程 · 基础（01–04）',
+          collapsed: false,
+          items: [
+            { text: '01 入门与本地环境', link: '/developer/custom/start' },
+            { text: '02 框架结构与请求生命周期', link: '/developer/custom/architecture' },
+            { text: '03 基础 API', link: '/developer/custom/api' },
+            { text: '04 数据库与迁移', link: '/developer/custom/database' },
+          ],
+        },
+        {
+          text: '功能自定义教程 · 实战与进阶（05–09）',
+          collapsed: false,
+          items: [
+            { text: '05 实战：从零做一个功能', link: '/developer/custom/first-feature' },
+            { text: '06 后台管理扩展', link: '/developer/custom/admin' },
+            { text: '07 前台数据流与交互', link: '/developer/custom/frontend' },
+            { text: '08 支付 / 发货 / 商品类型', link: '/developer/custom/payment' },
+            { text: '09 安全规范与发布检查', link: '/developer/custom/security' },
           ],
         },
         {

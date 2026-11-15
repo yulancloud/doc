@@ -150,4 +150,13 @@ GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a do
 
 变量清单、换色示例、主题切换原理见 [主题定制设置](/developer/theme)。改 PHP 侧文案默认值不生效，见 [PHP 配置与文案默认值](/developer/config)。
 
+### Q26：自己加的接口 / 页面，升级后没了，或新接口报 404？
+
+- **升级会覆盖**：从 Release 整目录覆盖时 `public/api/index.php`、`style.css`、各 HTML 都会还原成官方版本。定制要整理成补丁，每次升级后重新套用，见 [09 安全规范与发布检查](/developer/custom/security)。
+- **新接口 404**：路由 case 没匹配（顺序被前面的正则抢了），或末尾 `$known` 数组没同步加 —— 方法写错时会返回 404 而不是 405。见 [03 基础 API](/developer/custom/api)。
+- **只改了代码没改表**：新装站点靠 `database/schema.sql`，旧库靠 `bin/migrate.php`，两边都要写，见 [04 数据库与迁移](/developer/custom/database)。
+- **前台读不到数据**：脚本没用 `window.shopBoot()` 注册，或改了 JS 没 bump `?v=` 版本号，见 [07 前台数据流](/developer/custom/frontend)。
+
+完整流程见 [功能自定义 · 学习路线](/developer/custom)。
+
 > 完整的症状速查表与逐条处理见 [故障排查总览](/troubleshoot)；交付前请按 [上线自检清单](/deploy/checklist) 打勾。
