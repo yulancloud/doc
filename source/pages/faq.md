@@ -99,3 +99,29 @@ APP 与商城服务端之间为明文 HTTP，**请勿将 APP 暴露到公网**�
 正式地址是 **https://doc.yulancloud.us.ci/**，站点仍由 GitHub Pages 托管，只是绑定了自定义域名。原来的 `yulancloud.github.io/doc/` 会自动跳转到这个域名，建议收藏新地址。
 
 自定义域名在仓库 `Settings → Pages → Custom domain` 中设置，DNS 侧用一条 CNAME 把 `doc` 指向 `yulancloud.github.io`。
+
+### Q19：域名解析好了，打开却是 `Site not found · GitHub Pages`？
+
+DNS 通了但仓库没绑定 `Custom domain`。GitHub 按 `Host` 头分发站点，不认识这个域名就回 404。在 `Settings → Pages → Custom domain` 填入并保存即可。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
+
+### Q20：绑定后白屏、JS 全 404？
+
+站点构建基路径还是 `/doc/`，换成根域名后资源路径全错。把 `vite.base` 改成 `/` 重新构建发布，确认产物里是 `/assets/...`。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
+
+### Q21：`Enforce HTTPS` 一直是灰的 / 报 `The certificate does not exist yet`？
+
+多半是 Cloudflare 开了**橙云代理**，GitHub 看不到指向 `用户名.github.io` 的 CNAME，签不出证书。把该记录改成 **DNS only（灰云）** 等证书签发；保留橙云则把 SSL/TLS 模式设为 **Full**（别用 Flexible）。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
+
+### Q22：为什么还要加一条 TXT 记录？
+
+GitHub 现在要求在**账号级**（头像 → Settings → Pages → Add a domain）验证域名所有权，防止域名被别人抢绑。验证父域后其直接子域自动受保护，TXT 记录要一直保留。见 [域名与 HTTPS 故障](/troubleshoot/domain)。
+
+### Q23：`git push` 403 / 上传代码写不进去？
+
+细粒度 token 没开 `Contents: Read and Write`，或 git 的 HTTPS 被出网代理掐断。前者改用只勾 `repo` 的 classic PAT，后者走 GitHub Git Database API。见 [仓库与发布故障](/troubleshoot/repo)。
+
+### Q24：公开仓库会不会泄露数据库和密钥？
+
+上传前用 `.gitignore` 挡住 `data/shop.sqlite*`、备份、`config/.env`、`installed.lock`、APP 日志，并用 `git diff --cached --name-only` 与远程 tree 各复查一次。`config/config.php` 默认从环境变量读取、不含真实密钥，可以入库。见 [仓库与发布故障](/troubleshoot/repo)。
+
+> 完整的症状速查表与逐条处理见 [故障排查总览](/troubleshoot)；交付前请按 [上线自检清单](/deploy/checklist) 打勾。

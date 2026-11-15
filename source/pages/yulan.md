@@ -49,3 +49,7 @@ title: 欲蓝财务魔方
 - 全局默认设置、账号停用 → [站点设置与其他](/admin/settings)
 - 建号端怎么安装配置 → [Windows APP](/windows-app)
 - 建号失败 / 交付异常排查 → [订单与发货](/admin/orders) 与 [常见问题](/faq)
+
+## 相关排查
+
+建号失败、角色不对、口令不回显等问题的排查，见 [Windows APP 故障](/troubleshoot/app) 与 [后台与业务故障](/troubleshoot/backend)。

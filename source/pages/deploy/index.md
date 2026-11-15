@@ -15,6 +15,7 @@ title: 部署总览
 | **PHP 内置服务器**（本地试用 / 调试） | [PHP 内置服务器](/deploy/builtin) | 不要，靠 `router.php` 分发 |
 | 装好之后第一次初始化、或升级版本 | [安装与升级](/deploy/install) | — |
 | 开装之前核对环境 / 权限 | [部署前准备](/deploy/prepare) | — |
+| 交付 / 升级后逐项打勾验收 | [上线自检清单](/deploy/checklist) | — |
 
 > 简单记：**Nginx 要在面板里粘一段伪静态；Apache 什么都不用粘**，只要允许 `.htaccess` 生效。两者差别仅此而已，运行目录、安装向导、数据库迁移完全一样。
 
@@ -36,7 +37,11 @@ title: 部署总览
 ④ 执行一次 php bin/migrate.php（首次与升级后必跑）
       ↓
 ⑤ Ctrl+F5 清缓存 → 访问 /api/health 看到 build 版本号
+      ↓
+⑥ 按上线自检清单逐项打勾（安全核查 + 功能冒烟测试）
 ```
+
+> 最常漏的是第 ④ 步和第 ⑥ 步：漏跑迁移会让后台整片「加载失败」，漏做安全核查可能把 `data/shop.sqlite` 暴露在公网上。
 
 ## 为什么 `/api/`、`/admin`、`/console` 需要重写规则
 
@@ -61,3 +66,5 @@ Nginx 不会自己猜这些映射，所以要在伪静态里写清楚；Apache �
 - 用 Apache → [Apache 部署（免伪静态）](/deploy/apache)
 - 只是本地试一下 → [PHP 内置服务器](/deploy/builtin)
 - 已经跑起来了 → [安装与升级](/deploy/install)
+- 准备交付 → [上线自检清单](/deploy/checklist)
+- 遇到报错 → [故障排查总览](/troubleshoot)（按症状速查）

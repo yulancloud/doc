@@ -139,3 +139,7 @@ location ^~ /api/ {
 ## 下一步
 
 配置好重写后，去 [安装与升级](/deploy/install) 完成初始化。若你用的是 Apache，改看 [Apache 部署（免伪静态）](/deploy/apache)。
+
+## 相关排查
+
+接口返回 PHP 源码、后台空白、下单 404 等由 Web 服务器配置引发的问题，见 [部署与迁移故障](/troubleshoot/deploy)；上线前请按 [上线自检清单](/deploy/checklist) 核对。

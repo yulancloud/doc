@@ -18,6 +18,7 @@ export default defineValaxyConfig<ThemePressConfig>({
       { text: '后台使用', link: '/admin' },
       { text: '欲蓝财务魔方', link: '/yulan' },
       { text: 'Windows APP', link: '/windows-app' },
+      { text: '故障排查', link: '/troubleshoot' },
       { text: '常见问题', link: '/faq' },
     ],
     sidebar: {
@@ -39,6 +40,7 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: 'Apache 部署 · 免伪静态', link: '/deploy/apache' },
             { text: 'PHP 内置服务器 · 本地测试', link: '/deploy/builtin' },
             { text: '安装与升级迁移', link: '/deploy/install' },
+            { text: '上线自检清单', link: '/deploy/checklist' },
           ],
         },
         {
@@ -59,6 +61,18 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '欲蓝财务魔方', link: '/yulan' },
             { text: 'Windows APP', link: '/windows-app' },
             { text: '常见问题', link: '/faq' },
+          ],
+        },
+        {
+          text: '故障排查',
+          collapsed: false,
+          items: [
+            { text: '排查总览 · 症状速查', link: '/troubleshoot' },
+            { text: '部署与迁移故障', link: '/troubleshoot/deploy' },
+            { text: '后台与业务故障', link: '/troubleshoot/backend' },
+            { text: 'Windows APP 故障', link: '/troubleshoot/app' },
+            { text: '域名 / HTTPS / 文档站', link: '/troubleshoot/domain' },
+            { text: 'GitHub 仓库与发布', link: '/troubleshoot/repo' },
           ],
         },
       ],

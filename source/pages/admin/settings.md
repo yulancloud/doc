@@ -77,3 +77,7 @@ title: 站点设置与其他
 
 - [后台总览](/admin)
 - [常见问题](/faq)
+
+## 相关排查
+
+保存设置报错或「服务暂时不可用」的处理，见 [后台与业务故障](/troubleshoot/backend) 与 [部署与迁移故障](/troubleshoot/deploy)。

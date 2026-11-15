@@ -90,3 +90,7 @@ curl -i https://你的域名/api/health
 - 配置支付，见 [支付配置](/admin/payment)
 - 添加商品，见 [商品管理](/admin/products)
 - 用欲蓝财务魔方，见 [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app)
+
+## 相关排查
+
+迁移漏跑导致「加载失败」、旧库外键损坏导致保存 500 的处理，见 [部署与迁移故障](/troubleshoot/deploy)；完整验收项见 [上线自检清单](/deploy/checklist)。

@@ -79,3 +79,7 @@ https://你的域名/admin/
 | 登录后立刻被踢回登录页 | 检查 Cookie 的 Secure 设置与是否 HTTPS，见[部署前准备](/deploy/prepare) |
 
 更多见 [常见问题](/faq)。
+
+## 相关排查
+
+登录 / 权限 / CSRF 相关报错见 [后台与业务故障](/troubleshoot/backend)；后台空白不跳登录页的原因见 [部署与迁移故障](/troubleshoot/deploy)。

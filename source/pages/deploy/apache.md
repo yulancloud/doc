@@ -106,3 +106,7 @@ RewriteBase /shop/
 ## 下一步
 
 去 [安装与升级](/deploy/install) 完成初始化。若你其实用的是 Nginx，改看 [Nginx 部署（需伪静态）](/deploy/nginx)。
+
+## 相关排查
+
+`.htaccess` 未生效、接口全 404 的排查见 [部署与迁移故障](/troubleshoot/deploy)；通用症状速查见 [故障排查总览](/troubleshoot)。

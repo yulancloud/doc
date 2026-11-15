@@ -27,6 +27,13 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | `admin/settings.md` | 站点设置与其他 |
 | `yulan.md` / `windows-app.md` | 功能与配套 |
 | `faq.md` | 常见问题 |
+| `deploy/checklist.md` | 上线自检清单 |
+| `troubleshoot/index.md` | 故障排查总览（症状速查） |
+| `troubleshoot/deploy.md` | 部署与迁移故障 |
+| `troubleshoot/backend.md` | 后台与业务故障 |
+| `troubleshoot/app.md` | Windows APP 故障 |
+| `troubleshoot/domain.md` | 域名 / HTTPS / 文档站发布故障 |
+| `troubleshoot/repo.md` | GitHub 仓库与发布故障 |
 
 站点「编辑本页」按钮会直接跳转到对应文件的 GitHub 编辑页；改完提交后需重新构建发布。
 

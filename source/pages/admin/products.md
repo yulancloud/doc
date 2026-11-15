@@ -93,3 +93,7 @@ title: 商品管理
 - 订单与发货 → [订单管理](/admin/orders)
 - 欲蓝全局配置 → [欲蓝财务魔方](/yulan)
 - 配套客户端 → [Windows APP](/windows-app)
+
+## 相关排查
+
+商品编号、SKU、类型、删除限制等校验报错的逐条对照，见 [后台与业务故障](/troubleshoot/backend)；保存即 500 见 [部署与迁移故障](/troubleshoot/deploy)。

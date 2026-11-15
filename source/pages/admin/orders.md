@@ -67,3 +67,7 @@ title: 订单与发货
 - 支付参数 → [易支付配置](/admin/payment)
 - 商品与发货模板 → [商品管理](/admin/products)
 - 交付失败排查 → [常见问题](/faq)
+
+## 相关排查
+
+订单状态流转冲突、并发修改、建号失败整单回滚，见 [后台与业务故障](/troubleshoot/backend) 与 [Windows APP 故障](/troubleshoot/app)。

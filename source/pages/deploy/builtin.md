@@ -67,3 +67,7 @@ PHP 内置服务器官方文档明确标注「仅供开发使用」。对外请�
 3. 访问 `http://127.0.0.1:8090/api/health` 确认返回 JSON
 
 详见 [安装与升级](/deploy/install)。
+
+## 相关排查
+
+用命令行调试接口时记得带 `Origin` 头（CSRF 校验），用 curl 自测报 403 的原因见 [后台与业务故障](/troubleshoot/backend)。
