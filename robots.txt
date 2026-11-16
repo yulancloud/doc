@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://doc.yulancloud.us.ci/sitemap.xml
