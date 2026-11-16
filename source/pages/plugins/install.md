@@ -1,0 +1,148 @@
+---
+title: 如何安装插件（小白图文版）
+---
+
+# 如何安装插件（小白图文版）
+
+> 这篇给**第一次装插件、不想写代码**的人看。全程只需要：下载一个 zip、把文件放到网站目录、验证一下。
+> 插件不是另一套系统 —— 它就是别人按 [功能自定义教程](/developer/custom) 做出来的「新功能」，打包好给你用。
+
+::: tip 先看结论
+以示例插件为例，整个安装其实只有三步：**备份 → 把 `files/` 里的文件复制到项目对应目录 → 打开页面看效果**。
+不涉及建表、不涉及改核心文件，装错了删掉文件夹就恢复原样。
+:::
+
+## 开始之前，先确认三件事
+
+| 检查项 | 怎么确认 | 不对怎么办 |
+| --- | --- | --- |
+| 系统版本 ≥ v1.1.0 | 浏览器打开 `https://你的域名/api/health`，返回 JSON 里的 `build` 是 `20261115a` 或更新 | 官方功能插件（邮箱登录 / 深色模式 / 多管理员）需 `build` ≥ `20261116e`（v1.2.1）；不够就按 [安装与升级](/deploy/install) 升级 |
+| 网站运行目录指向 `public/` | 能正常打开商城首页、后台和 `/api/health` | 看 [部署总览](/deploy)，Nginx 要设运行目录 + 伪静态，Apache 靠 `.htaccess` |
+| 能往网站目录放文件 | 宝塔文件管理器 / FTP / SSH 任一 | 只有虚拟空间且不给传文件的话，装不了插件 |
+
+还要准备一个**备份位置**（本机一个文件夹就行）。
+
+::: warning 两句要记住的话
+1. **装之前一定备份**：`config/` 整个目录 + `data/shop.sqlite`。这是你出问题时唯一能一键还原的东西。
+2. **插件是别人写的代码**：只看你信得过的来源，装之前扫一眼包里有没有奇怪文件；生产站建议先在本地或测试站试一遍。
+:::
+
+## ① 去插件市场下载
+
+打开 [插件市场](https://yulancloud.us.ci/market/)，找到想要的插件，点 **「下载」**，会得到一个 `xxx-v1.0.0.zip`。
+
+卡片上值得看的信息：
+
+| 字段 | 意思 |
+| --- | --- |
+| `v1.0.0` | 插件版本 |
+| **已验证** | 官方人工检查过源码与安装说明 |
+| **兼容 ≥1.1.0** | 你的系统版本不能比它低 |
+| **安装说明** | 每个插件自己的 `INSTALL.md`，**以它为准** |
+
+> 市场的插件本体都托管在 GitHub 上（作者自己的仓库或索引仓库），点下载拿到的就是那个 zip。
+
+## ② 备份（一定要做）
+
+SSH / 命令行，在**项目根目录**（`public/` 的上一级）执行：
+
+```bash
+cp -r config config.bak-$(date +%Y%m%d-%H%M)
+cp data/shop.sqlite data/shop.sqlite.bak-$(date +%Y%m%d-%H%M)
+```
+
+用宝塔 / FTP 的话：把 `config` 文件夹和 `data` 文件夹下载到本机，再顺手打包一份整个网站目录更保险。
+
+::: warning
+`config/` 整个目录都不能删。删了安装向导会重新出现，见 [安装与升级](/deploy/install) 第四节。
+:::
+
+## ③ 解压，看看包里有什么
+
+解压 zip，一个标准插件包长这样：
+
+```
+hello-world/
+├── plugin.json        ← 插件信息（名称、版本、兼容版本），不用改
+├── INSTALL.md         ← ⭐ 这个插件的安装步骤，最重要，先读它
+├── README.md          ← 插件介绍
+├── files/             ← 要放进网站的新文件（路径相对项目根目录）
+│   └── public/plugins/hello/index.html
+└── assets/            ← 图标、截图，不用上传
+```
+
+如果包里还有 `patches/`，说明这个插件需要**修改已有文件**，请严格按 `INSTALL.md` 里写的「打开哪个文件 → 找到哪一行 → 粘贴哪段」来做，别自己发挥。
+
+## ④ 复制 `files/`（核心步骤）
+
+`files/` 下的路径是相对**项目根目录**写的，照原样复制即可。
+
+以示例插件为例，最终应该是：
+
+```
+你的网站目录/public/plugins/hello/index.html
+```
+
+命令行：
+
+```bash
+mkdir -p /你的网站目录/public/plugins
+cp -r files/public/plugins/hello /你的网站目录/public/plugins/
+```
+
+宝塔 / FTP：进 `public/` → 新建 `plugins` 文件夹 → 把解压出来的 `hello` 文件夹整个拖进去。
+
+::: warning 最常见的错误
+多套了一层目录，变成 `public/plugins/hello/hello/index.html`，打开就是 404。
+判断方法：复制完直接看 `public/plugins/hello/` 下面**应该直接躺着 `index.html`**。
+:::
+
+## ⑤ 按插件的 `INSTALL.md` 补做几件事
+
+不同插件差别都在这里。**只读这一步，别跳**。
+
+| 插件要求 | 你要做什么 | 示例插件 hello |
+| --- | --- | --- |
+| 只新增文件 | 做完第 ④ 步就结束了 | ✅ 就是这样 |
+| 要建表 / 加字段 | 在项目根目录跑 `php bin/migrate.php` | ❌ 不需要 |
+| 要合并片段进 `public/api/index.php` 等 | 按 `INSTALL.md` 逐条手工粘贴 | ❌ 不需要 |
+| 改了已有 HTML 里的 JS/CSS 引用 | 把全站 `?v=20261116e` 统一换成新值，再清 CDN 和浏览器缓存 | ❌ 不需要 |
+
+> 关于 `?v=`：JS/CSS 改了不 bump 版本号，浏览器和 CDN 会继续用旧文件，表现就是「我明明改了但没变化」。见 [功能自定义 · 学习路线](/developer/custom) 的「一次典型的改动会碰哪些文件」。
+
+## ⑥ 验证
+
+1. 打开 `https://你的域名/api/health` —— 应返回正常的 JSON。
+2. 打开插件新增的页面（示例插件是 `https://你的域名/plugins/hello/`）—— 看到「插件装好了 🎉」就成功。
+3. 回商城首页、后台各点几项，确认原来的功能没被影响。
+
+## ⑦ 卸载 / 回滚
+
+| 情况 | 做法 |
+| --- | --- |
+| **卸载插件** | 删掉第 ④ 步复制进去的文件；撤销第 ⑤ 步的合并；`?v=` 改回原值 |
+| **回滚到装之前** | 把第 ② 步备份的 `config/` 和 `data/shop.sqlite` 覆盖回去 |
+| **跑过迁移** | 一定要用备份的 `data/shop.sqlite` 还原，光删文件不够 |
+
+## 常见问题
+
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| 新页面 404 | 运行目录没指向 `public/`；或文件多套了一层；或伪静态没配 | 看 [部署总览](/deploy)、[Nginx](/deploy/nginx)、[Apache](/deploy/apache) |
+| 页面打开了但没样式 | 插件引用的 `assets/style.css` 路径不对，或 CDN 缓存 | 确认 `public/assets/style.css` 存在；清浏览器与 CDN 缓存 |
+| 改了文件但看不到变化 | 没 bump `?v=` 版本号 | 统一换一个新值再强刷 |
+| 后台提示「服务暂时不可用」 | 合并代码写错了 | 用备份还原；真实报错在浏览器 Network 响应体里，见 [部署与迁移故障](/troubleshoot/deploy) |
+| 装完安装向导又出现了 | `config/` 被动过或删了 | 用备份还原 `config/`，见 [安装与升级](/deploy/install) |
+| 商城首页打不开了 | 与本插件可能无关，但先恢复 | 立刻用第 ② 步备份还原，再按 [排查总览](/troubleshoot) 定位 |
+
+## 想把自己做的功能分享出来？
+
+用 [插件开发模板仓库](https://github.com/yulancloud/plugin-template) 点 `Use this template` 一键建仓，照 [功能自定义教程](/developer/custom) 加功能，打包后到 [插件市场](https://yulancloud.us.ci/market/) 点「上传插件」提交。完整步骤见 [如何上传插件到市场](/plugins/submit)。
+
+## 相关链接
+
+- [插件市场](https://yulancloud.us.ci/market/)（下载插件）
+- [如何上传插件到市场](/plugins/submit)
+- [功能自定义 · 学习路线](/developer/custom)（想自己加新功能）
+- [部署总览](/deploy) / [安装与升级](/deploy/install) / [上线自检清单](/deploy/checklist)
+- [插件索引仓库](https://github.com/yulancloud/plugins) / [插件开发模板仓库](https://github.com/yulancloud/plugin-template)

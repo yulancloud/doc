@@ -1,0 +1,14 @@
+{
+  "name": "yulan-docs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "valaxy",
+    "build": "valaxy build --ssg && cp dist/index.html dist/404.html"
+  },
+  "dependencies": {
+    "valaxy": "1.3.3",
+    "valaxy-theme-press": "1.3.3"
+  }
+}
