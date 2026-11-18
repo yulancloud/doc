@@ -31,11 +31,10 @@ Markdown 源文件在 [`source/pages/`](source/pages/)，按主题分目录：
 | `admin/settings.md` | 站点设置与其他 |
 | `yulan.md` / `windows-app.md` | 功能与配套 |
 | `faq.md` | 常见问题 |
-| `plugins/install.md` | 如何安装插件（含官方功能插件版本要求） |
-| `plugins/submit.md` | 如何投稿插件到插件市场 |
+| `plugins/install.md` | 如何安装插件（已并入「后台使用教程」板块） |
 | `developer/index.md` | 开发者总览 |
 | `developer/theme.md` | 主题定制设置（CSS 变量 / 亮暗两套 / 版本号） |
-| `developer/theme-v2.md` | v2 主题教程（更简单）+ 官方功能插件说明 |
+| `developer/theme-v2.md` | v2 插件主题教程（从零手把手）+ 官方功能插件说明 |
 | `developer/config.md` | PHP 配置与文案默认值 |
 | `developer/custom/index.md` | 功能自定义 · 学习路线（教程总览） |
 | `developer/custom/start.md` | 01 入门与本地环境 |

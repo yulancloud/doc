@@ -51,15 +51,6 @@ export default defineValaxyConfig<ThemePressConfig>({
     sidebar: {
       '/': [
         {
-          text: '插件',
-          collapsed: false,
-          items: [
-            { text: '插件市场 · 下载插件', link: 'https://yulancloud.us.ci/market/' },
-            { text: '如何安装插件（小白）', link: '/plugins/install' },
-            { text: '如何上传插件到市场', link: '/plugins/submit' },
-          ],
-        },
-        {
           text: '开始',
           collapsed: false,
           items: [
@@ -89,6 +80,9 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '订单与发货', link: '/admin/orders' },
             { text: '支付配置（易支付）', link: '/admin/payment' },
             { text: '站点设置与其他', link: '/admin/settings' },
+            { text: '主题与插件（上传安装）', link: '/developer/theme-v2' },
+            { text: '如何安装插件（小白）', link: '/plugins/install' },
+            { text: '插件市场 · 下载插件', link: 'https://yulancloud.us.ci/market/' },
           ],
         },
         {

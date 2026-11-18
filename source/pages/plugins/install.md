@@ -135,14 +135,8 @@ cp -r files/public/plugins/hello /你的网站目录/public/plugins/
 | 装完安装向导又出现了 | `config/` 被动过或删了 | 用备份还原 `config/`，见 [安装与升级](/deploy/install) |
 | 商城首页打不开了 | 与本插件可能无关，但先恢复 | 立刻用第 ② 步备份还原，再按 [排查总览](/troubleshoot) 定位 |
 
-## 想把自己做的功能分享出来？
-
-用 [插件开发模板仓库](https://github.com/yulancloud/plugin-template) 点 `Use this template` 一键建仓，照 [功能自定义教程](/developer/custom) 加功能，打包后到 [插件市场](https://yulancloud.us.ci/market/) 点「上传插件」提交。完整步骤见 [如何上传插件到市场](/plugins/submit)。
-
 ## 相关链接
 
 - [插件市场](https://yulancloud.us.ci/market/)（下载插件）
-- [如何上传插件到市场](/plugins/submit)
 - [功能自定义 · 学习路线](/developer/custom)（想自己加新功能）
 - [部署总览](/deploy) / [安装与升级](/deploy/install) / [上线自检清单](/deploy/checklist)
-- [插件索引仓库](https://github.com/yulancloud/plugins) / [插件开发模板仓库](https://github.com/yulancloud/plugin-template)

@@ -51,7 +51,7 @@ curl https://你的域名/api/health
 - 插件 `files/` 静态资源装到 `public/plugins/<id>/`，零侵入、不建表
 - 纯 PHP 解析 ZIP，不依赖 ZipArchive 扩展；多重安全校验，危险包一律拒绝
 - 更简单的制作方式见 [v2 插件主题教程（后台上传）](/developer/theme-v2)；旧的手动改 CSS 方式见 [v1 插件主题教程](/developer/theme)
-- 也可到 [插件市场](https://yulancloud.us.ci/market/) 下载 / 上传分享
+- 也可到 [插件市场](https://yulancloud.us.ci/market/) 下载现成插件
 
 ### 3）干净安装默认 0 分类 / 0 商品
 - 全新安装不再预置演示分类与商品；需要演示数据时 `php bin/init_db.php --with-demo` 显式开启

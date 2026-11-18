@@ -47,9 +47,8 @@ features:
 | 做二次开发、加新功能 | [功能自定义 · 学习路线](/developer/custom)（10 篇教程） |
 | 给商城装个插件、不知道怎么放文件 | [如何安装插件（小白图文版）](/plugins/install) |
 | 浏览 / 下载插件 | [插件市场](https://yulancloud.us.ci/market/) |
-| 装邮箱登录 / 深色模式 / 多管理员插件 | [官方功能插件（v2 教程）](/developer/theme-v2#官方功能插件v121-起) |
-| 把自己做的功能分享给别人 | [如何上传插件到市场](/plugins/submit) |
-| 做主题 / 插件，**后台上传 zip 即装**（推荐） | [v2 插件主题教程](/developer/theme-v2) |
+| 装邮箱登录 / 深色模式 / 多管理员插件 | [官方功能插件（v2 教程）](/developer/theme-v2#官方功能插件-v1-2-1-起) |
+| 做主题 / 插件，**后台上传 zip 即装**（手把手） | [v2 插件主题教程](/developer/theme-v2) |
 | 老方式：手动改 CSS 变量换配色 | [v1 插件主题教程](/developer/theme) |
 | 改 PHP 默认文案 / 业务参数、新增可配字段 | [PHP 配置与文案默认值](/developer/config) |
 | 报错了不知道为什么 | [故障排查总览](/troubleshoot)（按症状速查） |
@@ -60,7 +59,7 @@ features:
 
 - 主仓库（系统源码 / Release 系统包）：[yulancloud/yulancloud](https://github.com/yulancloud/yulancloud)
 - Windows APP 仓库（exe 下载）：[yulancloud/yulancloudRubik-Windows](https://github.com/yulancloud/yulancloudRubik-Windows)
-- 插件市场（下载 / 上传插件）：[yulancloud.us.ci/market](https://yulancloud.us.ci/market/)
+- 插件市场（下载插件）：[yulancloud.us.ci/market](https://yulancloud.us.ci/market/)
 - 插件索引仓库（`plugins.json`）：[yulancloud/plugins](https://github.com/yulancloud/plugins)
 - 插件开发模板仓库（`Use this template`）：[yulancloud/plugin-template](https://github.com/yulancloud/plugin-template)
 
