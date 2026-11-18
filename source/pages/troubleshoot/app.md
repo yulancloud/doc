@@ -10,12 +10,18 @@ title: Windows APP 故障
 
 ## 启动即退出 / 提示需要管理员
 
-**设计如此，不是故障。** APP 必须在**管理员账户**下运行：Go 版通过 Windows Token 的 `IsElevated` 检测，未提权直接退出；Python 版用 `IsUserAnAdmin`。
+APP 必须在**管理员账户**下运行。判定方式随版本不同：
+
+- **Python 版**：用 `IsUserAnAdmin`（检查是否属于 Administrators 组）。
+- **Go 版 v1.2.0 及更早**：只认 `IsElevated`（UAC 提权令牌）。这会在**域账户、runas、计划任务、关闭 UAC、内置 Administrator** 等场景误判——明明是管理员账号却提示「不是管理员」并闪退。
+- **Go 版修复版**：改为多重判定，`IsElevated` 或「属于 Administrators 组」任一成立即放行，行为与 Python 版一致。用管理员账号直接双击即可运行。
 
 处理：
 
-- 用仓库里的 `run_as_admin.bat`（自动 UAC 提权），或右键 exe →「以管理员身份运行」
-- 做成计划任务 / 服务时，勾选「使用最高权限运行」，且运行账号要是管理员
+- **先确认 exe 是修复版**：启动横幅 / `/api/v1/health` 的 `version` 应为 `1.2.1`；若仍是 `1.2.0`，去仓库 Release 重新下载覆盖。
+- 用仓库里的 `run_as_admin.bat`（自动 UAC 提权），或右键 exe →「以管理员身份运行」最稳妥。
+- 做成计划任务 / 服务时，勾选「使用最高权限运行」，且运行账号要是管理员。
+- 若确认是管理员账号仍被拒（极特殊的域策略），命令行加 `--allow-non-admin` 可临时跳过检查排查；建号命令本身仍受系统权限约束，权限不足会在日志里报 `net` 失败。
 
 **日志隔离**也是刻意设计：日志目录 ACL 只授权 SYSTEM 与 Administrators，普通用户完全看不到运行日志，避免账号与口令泄露。
 

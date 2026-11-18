@@ -6,6 +6,14 @@ title: 版本更新
 
 这里记录每个版本相对上一版的变化与升级要点。升级前请先备份 `data/shop.sqlite` 与 `config/.env`。
 
+## Windows APP v1.2.1（独立发布）
+
+> 这是建号端 APP 的修复版本，与商城系统版本无关，商城端无需改动。
+
+- **修复管理员账号被误判闪退**：旧版 Go exe 只认 UAC 提权令牌（`IsElevated`），域账户 / runas / 计划任务 / 关闭 UAC / 内置 Administrator 等场景下，明明是管理员账号却提示「不是管理员」并退出。新版同时接受「Administrators 组成员身份」，行为与 Python 版一致，管理员账号直接双击即可运行。
+- 错误提示更明确；Python 参考实现版本号同步为 1.2.1。
+- 升级：到 [APP 仓库 Release](https://github.com/yulancloud/yulancloudRubik-Windows/releases/tag/v1.2.1) 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.2.1`。详见 [Windows APP 故障](/troubleshoot/app)。
+
 ## v1.2.2
 
 插件运行时版。静态资源版本号升到 `v=20261118a`（健康检查 `build` 为 `20261118a`）。

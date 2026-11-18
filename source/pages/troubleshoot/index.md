@@ -51,7 +51,7 @@ title: 故障排查总览
 
 | 你看到的 | 最可能的原因 | 去哪看 |
 | --- | --- | --- |
-| APP 启动即退出，提示需要管理员 | 未提权，必须右键「以管理员身份运行」 | [Windows APP 故障](/troubleshoot/app) |
+| APP 启动即退出，提示需要管理员 | 老版 Go exe 只认 UAC 提权令牌会误判管理员账号；升级到 1.2.1 或右键「以管理员身份运行」 | [Windows APP 故障](/troubleshoot/app) |
 | 提示 token 为空或仍是占位值 | 配置没改 | [Windows APP 故障](/troubleshoot/app) |
 | 网站侧连不上 APP | 端口 / 防火墙 / `listen_host` / 口令不一致 | [Windows APP 故障](/troubleshoot/app) |
 | 建号成功但角色不对 | `admin_products` 商品 ID 没配对 | [Windows APP 故障](/troubleshoot/app) |
