@@ -6,6 +6,16 @@ title: 版本更新
 
 这里记录每个版本相对上一版的变化与升级要点。升级前请先备份 `data/shop.sqlite` 与 `config/.env`。
 
+## Windows APP v1.3.0（Python 版打包，独立发布）
+
+> 这是建号端 APP 的版本，与商城系统版本无关，商城端无需改动。用于替代在部分环境会误判管理员而闪退的 Go 版。
+
+- **改为 Python 版打包**：把官方 Python 脚本连同完整 Python 3.11 运行时打包成单个 exe（约 7.4 MB），免安装环境、双击即用。
+- **彻底解决闪退**：内嵌 UAC 提权清单（双击自动请求提权）+ 多重管理员判定（`IsUserAnAdmin` + `CheckTokenMembership` 管理员组），域账户 / runas / 计划任务 / 关闭 UAC / 内置 Administrator 都能正确识别，不再误判。
+- **编码加固**：修复英文 Windows（cp1252）下中文日志/帮助文本编码崩溃导致的闪退。
+- **配置与日志固定在 exe 同目录**：升级只覆盖 exe，配置不丢。
+- 升级：到 [APP 仓库 Release](https://github.com/yulancloud/yulancloudRubik-Windows/releases/tag/v1.3.0) 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.3.0`。详见 [Windows APP](/windows-app)。
+
 ## v1.2.3（插件界面修复版）
 
 > 修复「功能插件装了却看不到界面」。商城系统版本，与 Windows APP 无关。

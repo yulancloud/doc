@@ -4,23 +4,23 @@ title: Windows APP 故障
 
 # Windows APP 故障
 
-「欲蓝财务魔方 APP」跑在 **Windows 服务器**上，接收网站端的建号命令。它有两个实现：交付用的是 **Go 编译的单文件 exe**（免环境），仓库里另留一份 **Python 参考实现**（需 Python 3.8+，纯标准库）。排障时先确认客户用的是哪一个。
+「欲蓝财务魔方 APP」跑在 **Windows 服务器**上，接收网站端的建号命令。自 **v1.3.0** 起交付的是**Python 版打包的单文件 exe**（自带 Python 3.11 运行时，免环境）；旧版 Go exe 已不建议继续使用。排障时先看 `/api/v1/health` 的 `version` 确认版本。
 
-接口：`GET /api/v1/health` 探活、`POST /api/v1/create-user` 建号，鉴权为 `Authorization: Bearer {token}`。用法见 [Windows APP](/windows-app)。
+接口：`GET /api/v1/health` 探活、`POST /api/v1/create-user` 建号、`POST /api/v1/update-user` 改号，鉴权为 `Authorization: Bearer {token}`。用法见 [Windows APP](/windows-app)。
 
 ## 启动即退出 / 提示需要管理员
 
-APP 必须在**管理员账户**下运行。判定方式随版本不同：
+APP 必须在**管理员账户**下运行。各版本判定方式：
 
-- **Python 版**：用 `IsUserAnAdmin`（检查是否属于 Administrators 组）。
-- **Go 版 v1.2.0 及更早**：只认 `IsElevated`（UAC 提权令牌）。这会在**域账户、runas、计划任务、关闭 UAC、内置 Administrator** 等场景误判——明明是管理员账号却提示「不是管理员」并闪退。
-- **Go 版修复版**：改为多重判定，`IsElevated` 或「属于 Administrators 组」任一成立即放行，行为与 Python 版一致。用管理员账号直接双击即可运行。
+- **v1.3.0（Python 版打包，推荐）**：内嵌 UAC 提权清单，双击自动请求提权；管理员判定用 `IsUserAnAdmin` + `CheckTokenMembership`（Administrators 组）多重判定，域账户 / runas / 计划任务 / 关闭 UAC / 内置 Administrator 都能正确识别，不会再误判。
+- **旧 Go 版 v1.2.0 及更早**：只认 `IsElevated`（UAC 提权令牌），在域账户、runas、计划任务、关闭 UAC、内置 Administrator 等场景会误判——明明是管理员账号却提示「不是管理员」并闪退。**这就是闪退的根因，直接换 v1.3.0 即可解决。**
 
 处理：
 
-- **先确认 exe 是修复版**：启动横幅 / `/api/v1/health` 的 `version` 应为 `1.2.1`；若仍是 `1.2.0`，去仓库 Release 重新下载覆盖。
-- 用仓库里的 `run_as_admin.bat`（自动 UAC 提权），或右键 exe →「以管理员身份运行」最稳妥。
+- **先确认版本**：`/api/v1/health` 的 `version` 应为 `1.3.0`。若仍是 Go 版 / `1.2.x` 且闪退，去 [APP 仓库 Release](https://github.com/yulancloud/yulancloudRubik-Windows/releases/tag/v1.3.0) 下载 v1.3.0 的 `yulan_cube_app.exe` 覆盖即可（配置不用改）。
+- 双击 exe 后在 UAC 窗口点「是」；或右键 `run_as_admin.bat` →「以管理员身份运行」。
 - 做成计划任务 / 服务时，勾选「使用最高权限运行」，且运行账号要是管理员。
+- v1.3 已修复英文 Windows 下中文输出编码崩溃导致的闪退。
 - 若确认是管理员账号仍被拒（极特殊的域策略），命令行加 `--allow-non-admin` 可临时跳过检查排查；建号命令本身仍受系统权限约束，权限不足会在日志里报 `net` 失败。
 
 **日志隔离**也是刻意设计：日志目录 ACL 只授权 SYSTEM 与 Administrators，普通用户完全看不到运行日志，避免账号与口令泄露。
