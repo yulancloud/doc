@@ -42,6 +42,7 @@ export default defineValaxyConfig<ThemePressConfig>({
       { text: '部署指南', link: '/deploy' },
       { text: '后台使用', link: '/admin' },
       { text: '欲蓝财务魔方', link: '/yulan' },
+      { text: '魔方使用教程', link: '/yulan-guide' },
       { text: 'Windows APP', link: '/windows-app' },
       { text: '故障排查', link: '/troubleshoot' },
       { text: '开发者', link: '/developer' },
@@ -90,6 +91,7 @@ export default defineValaxyConfig<ThemePressConfig>({
           collapsed: false,
           items: [
             { text: '欲蓝财务魔方', link: '/yulan' },
+            { text: '魔方财务使用教程（从零到交付）', link: '/yulan-guide' },
             { text: 'Windows APP', link: '/windows-app' },
             { text: '常见问题', link: '/faq' },
           ],

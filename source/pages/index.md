@@ -42,6 +42,7 @@ features:
 | 添加商品、选商品类型 | [商品管理](/admin/products) |
 | 配置在线支付 | [支付配置](/admin/payment) |
 | 配欲蓝服务器 | [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app) |
+| 从零跑通魔方财务（下单自动建号交付） | [魔方财务使用教程](/yulan-guide) |
 | 上线前逐项打勾 | [上线自检清单](/deploy/checklist) |
 | 看每个版本改了什么 | [版本更新](/changelog) |
 | 做二次开发、加新功能 | [功能自定义 · 学习路线](/developer/custom)（10 篇教程） |
