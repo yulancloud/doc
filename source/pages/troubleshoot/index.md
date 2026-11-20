@@ -10,7 +10,7 @@ title: 故障排查总览
 
 不管什么报错，先做这三步，能解决大部分问题：
 
-1. **确认服务器跑的是新代码**：`curl https://你的域名/api/health`，看返回里的 `build` 是否为 `20261116e`。不是就说明文件没覆盖全，或 PHP/OPcache 还在跑旧代码。
+1. **确认服务器跑的是新代码**：`curl https://你的域名/api/health`，看返回里的 `build` 是否为 `20261120b`（v1.4.0）。不是就说明文件没覆盖全，或 PHP/OPcache 还在跑旧代码。
 2. **看浏览器 Network 面板**：按 `F12` → Network，复现一次操作，点开失败的请求看 **HTTP 状态码**和**响应体**。返回一段 `<?php` 源码、返回 HTML 登录页、返回 500，对应完全不同的原因。
 3. **确认刚跑过迁移**：升级覆盖文件后必须执行一次 `php bin/migrate.php`。它是幂等的，重复执行安全，且内置旧库自动修复。
 
@@ -44,22 +44,19 @@ title: 故障排查总览
 | 「订单状态已被其他人修改，请刷新后重试」 | 并发修改冲突 | [后台与业务故障](/troubleshoot/backend) |
 | 「网关地址无效」「订单金额异常」 | 支付配置或网关返回异常 | [后台与业务故障](/troubleshoot/backend) |
 | 支付成功但订单没变已付款 | 异步回调没到 / 验签失败 | [后台与业务故障](/troubleshoot/backend) |
-| 「欲蓝服务器地址未配置」「无法连接欲蓝 APP」 | 商品级/全局服务器配置或 APP 未启动 | [Windows APP 故障](/troubleshoot/app) |
-| 「欲蓝账号创建失败：…」 | APP 返回失败，整单回滚 | [Windows APP 故障](/troubleshoot/app) |
 
-### Windows APP
+### 上游对接 / 魔方云 / 工单（v1.4）
 
 | 你看到的 | 最可能的原因 | 去哪看 |
 | --- | --- | --- |
-| APP 启动即退出，提示需要管理员 | 老版 Go exe 只认 UAC 提权令牌会误判管理员账号；升级到 1.2.1 或右键「以管理员身份运行」 | [Windows APP 故障](/troubleshoot/app) |
-| 提示 token 为空或仍是占位值 | 配置没改 | [Windows APP 故障](/troubleshoot/app) |
-| 网站侧连不上 APP | 端口 / 防火墙 / `listen_host` / 口令不一致 | [Windows APP 故障](/troubleshoot/app) |
-| 建号成功但角色不对 | `admin_products` 商品 ID 没配对 | [Windows APP 故障](/troubleshoot/app) |
-| 日志里出现明文密码 | 旧版本掩码缺陷，升级到 Go 版 exe | [Windows APP 故障](/troubleshoot/app) |
+| 上游「测试连接」失败 | 接口地址 / 账号 / 密钥 / HTTPS 有误，或上游不可达 | [魔方财务使用教程](/yulan-guide) |
+| 同步产品为空 | 上游返回格式不匹配或无产品 | [魔方财务（对接上游）](/yulan) |
+| 支付后未开通 / 开通失败 | 上游余额不足、产品下架、接口报错（失败会整单回滚） | [魔方财务使用教程](/yulan-guide) |
+| 用户看不到某台云主机 / 工单 | 归属隔离：只能看自己的（跨用户访问 404 属正常） | [魔方云](/cloud) · [工单系统](/tickets) |
+| 升级后看不到新菜单 | 浏览器缓存，或没跑迁移 | [安装与升级](/deploy/install) |
 
 ## 分册导航
 
 - [部署与迁移故障](/troubleshoot/deploy) —— 500、源码泄露、迁移、缓存、权限
 - [后台与业务故障](/troubleshoot/backend) —— 真实报错文案逐条对照
-- [Windows APP 故障](/troubleshoot/app) —— 建号端连不通 / 建号失败
 - [上线自检清单](/deploy/checklist) —— 交付前逐项打勾

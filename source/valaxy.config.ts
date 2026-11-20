@@ -41,9 +41,10 @@ export default defineValaxyConfig<ThemePressConfig>({
     nav: [
       { text: '部署指南', link: '/deploy' },
       { text: '后台使用', link: '/admin' },
-      { text: '欲蓝财务魔方', link: '/yulan' },
+      { text: '魔方财务', link: '/yulan' },
+      { text: '魔方云', link: '/cloud' },
+      { text: '工单系统', link: '/tickets' },
       { text: '魔方使用教程', link: '/yulan-guide' },
-      { text: 'Windows APP', link: '/windows-app' },
       { text: '故障排查', link: '/troubleshoot' },
       { text: '开发者', link: '/developer' },
       { text: '常见问题', link: '/faq' },
@@ -90,9 +91,10 @@ export default defineValaxyConfig<ThemePressConfig>({
           text: '功能与配套',
           collapsed: false,
           items: [
-            { text: '欲蓝财务魔方', link: '/yulan' },
+            { text: '魔方财务（对接上游）', link: '/yulan' },
             { text: '魔方财务使用教程（从零到交付）', link: '/yulan-guide' },
-            { text: 'Windows APP', link: '/windows-app' },
+            { text: '魔方云（KVM 云服务器）', link: '/cloud' },
+            { text: '工单系统', link: '/tickets' },
             { text: '常见问题', link: '/faq' },
           ],
         },
@@ -135,7 +137,6 @@ export default defineValaxyConfig<ThemePressConfig>({
             { text: '排查总览 · 症状速查', link: '/troubleshoot' },
             { text: '部署与迁移故障', link: '/troubleshoot/deploy' },
             { text: '后台与业务故障', link: '/troubleshoot/backend' },
-            { text: 'Windows APP 故障', link: '/troubleshoot/app' },
           ],
         },
       ],
@@ -146,7 +147,6 @@ export default defineValaxyConfig<ThemePressConfig>({
     },
     socialLinks: [
       { icon: 'i-ri-github-line', link: 'https://github.com/yulancloud/yulancloud', name: '主仓库' },
-      { icon: 'i-ri-github-line', link: 'https://github.com/yulancloud/yulancloudRubik-Windows', name: 'Windows APP' },
     ],
     footer: {
       message: '欲蓝财务 · 文档教程',

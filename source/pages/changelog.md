@@ -6,6 +6,20 @@ title: 版本更新
 
 这里记录每个版本相对上一版的变化与升级要点。升级前请先备份 `data/shop.sqlite` 与 `config/.env`。
 
+## v1.4.0（魔方云 · 对接上游 · 工单系统）
+
+> 商城系统版本。`GET /api/health` 返回 `version=1.4.0`、`build=20261120b`。
+
+一次重大功能升级：
+
+- **魔方云（KVM 云服务器）**：新增 `cloud` 商品类型，支付后自动在上游创建云主机，交付连接地址 / 系统 / 配置 / 一次性密码；后台「魔方云 · 云主机」与用户中心「我的云主机」支持开机 / 关机 / 重启 / 重置密码。详见[魔方云](/cloud)。
+- **魔方财务重新定义 = 对接上游**：新增「魔方财务 · 上游管理」，可维护多条命名上游、测试连接、同步上游产品、加价销售；商品发货配置绑定上游 + 上游产品，支付后自动在上游开通。**移除了本地 Windows 建号端**，不再需要 exe / 8321 端口 / Token。详见[魔方财务（对接上游）](/yulan)与[使用教程](/yulan-guide)。
+- **工单系统**：用户提单 / 回复 / 关闭，后台受理 / 回复 / 切换状态，归属严格隔离。详见[工单系统](/tickets)。
+- **数据库**：新增 `upstreams / upstream_products / cloud_vms / tickets / ticket_replies` 五张表；`products` 放开 cloud 类型并补 `upstream_id / upstream_product_id` 列；迁移幂等、保留全部历史数据。
+- **mock 模式**：站点设置 `upstream_mock=1` 时不联网即可演示开通与交付。
+
+> 升级：下载 `yulan-shop-v140.zip` 覆盖站点（保留 `config/` 与 `data/`），执行 `php bin/migrate.php`，确认 `build=20261120b`，`Ctrl+F5` 强刷后台即可看到新菜单。也可后台「在线更新」一键升级。
+
 ## v1.3.0（改名「欲蓝财务」· 多 API · 在线更新）
 
 > 商城系统版本。`GET /api/health` 返回 `version=1.3.0`、`build=20261120a`。与 Windows APP v1.3.0 是两个独立发布物。
@@ -28,7 +42,8 @@ title: 版本更新
 - **彻底解决闪退**：内嵌 UAC 提权清单（双击自动请求提权）+ 多重管理员判定（`IsUserAnAdmin` + `CheckTokenMembership` 管理员组），域账户 / runas / 计划任务 / 关闭 UAC / 内置 Administrator 都能正确识别，不再误判。
 - **编码加固**：修复英文 Windows（cp1252）下中文日志/帮助文本编码崩溃导致的闪退。
 - **配置与日志固定在 exe 同目录**：升级只覆盖 exe，配置不丢。
-- 升级：到 [APP 仓库 Release](https://github.com/yulancloud/yulancloudRubik-Windows/releases/tag/v1.3.0) 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.3.0`。详见 [Windows APP](/windows-app)。
+- 升级：到 APP 仓库 Release 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.3.0`。
+- **注**：该建号端已在 v1.4.0 由「对接上游」取代并移除，此条仅作历史记录保留；新部署请使用[魔方财务（对接上游）](/yulan)。
 
 ## v1.2.3（插件界面修复版）
 
@@ -47,7 +62,7 @@ title: 版本更新
 
 - **修复管理员账号被误判闪退**：旧版 Go exe 只认 UAC 提权令牌（`IsElevated`），域账户 / runas / 计划任务 / 关闭 UAC / 内置 Administrator 等场景下，明明是管理员账号却提示「不是管理员」并退出。新版同时接受「Administrators 组成员身份」，行为与 Python 版一致，管理员账号直接双击即可运行。
 - 错误提示更明确；Python 参考实现版本号同步为 1.2.1。
-- 升级：到 [APP 仓库 Release](https://github.com/yulancloud/yulancloudRubik-Windows/releases/tag/v1.2.1) 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.2.1`。详见 [Windows APP 故障](/troubleshoot/app)。
+- 升级：到 APP 仓库 Release 下载 `yulan_cube_app.exe` 覆盖即可，`/api/v1/health` 的 `version` 应为 `1.2.1`。（历史记录，v1.4.0 起建号端已由上游对接取代。）
 
 ## v1.2.2
 

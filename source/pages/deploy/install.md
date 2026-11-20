@@ -103,7 +103,8 @@ curl -i https://你的域名/api/health
 - 登录后台 `/admin/`，见 [后台总览](/admin)
 - 配置支付，见 [支付配置](/admin/payment)
 - 添加商品，见 [商品管理](/admin/products)
-- 用欲蓝财务魔方，见 [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app)
+- 对接上游财务系统，见 [魔方财务（对接上游）](/yulan) 与 [魔方财务使用教程](/yulan-guide)
+- 卖 KVM 云主机，见 [魔方云](/cloud)；客服工单见 [工单系统](/tickets)
 
 ## 相关排查
 

@@ -62,39 +62,45 @@ POST /api/orders/{no}/pay              PaymentService::start() → 返回网关�
 
 ## 四、发货与商品类型
 
-`products.type` 三个值（有 CHECK 约束）：
+`products.type` 四个值（有 CHECK 约束）：
 
 | type | 含义 | 发货路径 |
 | --- | --- | --- |
 | `virtual` | 虚拟商品 | 支付成功后 `DeliveryService::deliverVirtualItems()` 按模板自动写 `order_deliveries.content` |
 | `physical` | 实体商品 | 后台填物流单号走 `shipOrder()` |
-| `yulan` | 欲蓝财务魔方 | `YulanProvision` / `YulanConnector` 在服务器建号并回写账号 |
+| `yulan` | 魔方财务（对接上游） | 绑定上游后走 `UpstreamService::provision()`；未绑定上游时 `YulanProvision` 兼容回退 |
+| `cloud` | 魔方云（KVM 云服务器） | `DeliveryService::deliverCloud()` 调上游创建云主机，写 `cloud_vms` 与发货记录 |
 
-`DeliveryService` 的关键方法：`deliverVirtualItems()`、`kindOf()`（type → `order_deliveries.kind`）、`renderContent()`、`expand()`（模板变量替换，见文件内实现）、`forOrder()`、`setContent()`、`orderIsAllVirtual()`。
+`DeliveryService` 的关键方法：`deliverVirtualItems()`、`deliverCloud()`、`kindOf()`（type → `order_deliveries.kind`，含 `cloud`）、`renderContent()`、`expand()`、`forOrder()`、`setContent()`、`orderIsAllVirtual()`（cloud 算虚拟，免运费）。
 
 **扩展发货方式需要动三处：**
 
 1. `products.type` 的 CHECK 加新值 → **必须重建表**（见 [04 数据库与迁移](/developer/custom/database) 第五节，SQLite 不能直接改 CHECK）
-2. `order_deliveries.kind` 的 CHECK 同步加值（同样重建表，`migrate.php` 里已有 `rebuildDeliveriesForYulan()` 可参考）
-3. `DeliveryService::kindOf()` 与 `deliverVirtualItems()` 里加分支；后台「商品类型」下拉框、前台展示逻辑同步
+2. `order_deliveries.kind` 的 CHECK 同步加值（同样重建表，`migrate.php` 里已有 `rebuildProductsForYulan()` / 交付表重建可参考）
+3. `DeliveryService::kindOf()` 与对应 `deliver*()` 里加分支；后台「商品类型」下拉框、前台展示逻辑同步
 
-> 这正是 v1.0 加入 `yulan` 类型时踩过的坑：`order_deliveries.kind` 的 CHECK 漏加 `yulan`，导致欲蓝订单写发货记录直接 500。**能不加枚举值就不加** —— 把新类型映射成已有 `virtual` / `physical` 之一，改动会小很多。
+> 这正是加入 `yulan` / `cloud` 类型时踩过的坑：`order_deliveries.kind` 的 CHECK 漏加新值，订单写发货记录直接 500。**能不加枚举值就不加** —— 把新类型映射成已有 `virtual` / `physical` 之一，改动会小很多。
 
-## 五、商品级服务器（欲蓝魔方）
+## 五、上游对接（v1.4）
 
-每个商品可以独立配置服务器，字段在 `products` 表：
+v1.4 用统一的 `upstreams` 表承载两类上游，`kind` 区分 `finance`（魔方财务）/ `cloud`（魔方云）：
 
 ```text
-yulan_server_ip / yulan_server_port / yulan_server_user / yulan_server_pass / yulan_rdp_host
-yulan_account_limit / yulan_ip_restrict
+upstreams:            id / name / kind / base_url / api_user / api_key / financial_id / account_type / use_https / enabled
+upstream_products:    id / upstream_id / external_id / name / spec / price_cents / status
+cloud_vms:            id / order_id / product_id / user_id / upstream_id / external_id / ip / os / cpu / mem / status ...
+tickets / ticket_replies: 工单与回复
 ```
 
-- 连接地址优先级：商品级 `rdp_host` → 商品级 IP → 全局默认
-- `yulan_server_pass` **只写不读**：`AdminService::productDelivery()` 不返回它，后台表单留空表示不修改；`__CLEAR__` 表示清除
-- 建号在 `YulanConnector` / `YulanProvision`，账号流水写 `yulan_accounts`
-- 口令不能进日志、不能下发前端
+商品通过 `products.upstream_id` + `products.upstream_product_id` 绑定上游产品。
 
-详见 [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app)。
+- 核心服务：`UpstreamService`（上游 CRUD / 测试连接 / 同步产品 / 开通 / 实例操作）、`CloudVmService`（实例持久化与操作）、`TicketService`（工单）。
+- `api_key` / 密钥「只写不读」：`UpstreamService::publicRow()` 只回传 `api_key_set`，不回传明文；留空 = 不修改，`__CLEAR__` = 清除。
+- 云主机密码仅开通时一次性写入发货内容，`cloud_vms` 不长期存明文。
+- `upstream_mock=1` 时 `UpstreamService` 不联网，写 `data/upstream_mock_queue.jsonl` 并返回模拟数据。
+- 所有用户侧查询强制 `user_id` 过滤，跨用户访问返回 404。
+
+详见 [魔方财务（对接上游）](/yulan)、[魔方云](/cloud) 与 [工单系统](/tickets)。
 
 ## 六、余额 / 充值 / 免费订单
 
@@ -120,7 +126,7 @@ yulan_account_limit / yulan_ip_restrict
 
 ```bash
 bash tests/e2e_payment.sh     # 支付链路回归
-bash tests/e2e_yulan.sh       # 欲蓝建号 / 商品级服务器 / 旧库迁移（64 项断言）
+bash tests/e2e_yulan.sh       # 上游对接 / 云主机开通 / 工单 / 旧库迁移（历史脚本名沿用）
 curl -s https://你的域名/api/payment/info   # 支付能力是否符合预期
 ```
 

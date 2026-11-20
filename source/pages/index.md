@@ -4,7 +4,7 @@ home: true
 hero:
   name: 欲蓝财务
   text: 官方文档教程
-  tagline: 基于 PHP + SQLite 的商城系统，内置「欲蓝财务魔方」产品类型与商品级服务器配置
+  tagline: 基于 PHP + SQLite 的商城系统，内置魔方云、魔方财务（对接上游）与工单系统
   actions:
     - text: 部署指南
       link: /deploy
@@ -17,12 +17,14 @@ features:
     details: Nginx 需手填伪静态，Apache 用自带 .htaccess 免配置，另有 PHP 内置服务器本地测试
   - title: 后台逐项教程
     details: 商品类型、发货配置、订单状态、易支付配置、站点与运费设置，一篇一篇讲清楚
-  - title: 欲蓝财务魔方
-    details: 商品类型选择、每个商品独立配置服务器、下单自动建号交付
-  - title: Windows APP
-    details: 单文件 exe，免环境、仅管理员可运行、日志隔离、自动 UAC 提权
+  - title: 魔方云（KVM 云服务器）
+    details: 新增 cloud 商品类型，支付后自动在上游创建云主机，用户可自助开关机、重启、重置密码
+  - title: 魔方财务 · 对接上游
+    details: 添加上游、同步产品、加价销售，订单支付后自动在上游开通，无需本地建号端
+  - title: 工单系统
+    details: 用户提单 / 回复 / 关闭，后台受理 / 回复 / 切换状态，归属严格隔离
   - title: 按症状查故障
-    details: 部署、迁移、支付、建号的真实踩坑记录，附上线自检清单
+    details: 部署、迁移、支付、开通的真实踩坑记录，附上线自检清单
   - title: 开发者 · 插件与主题制作
     details: v2 后台上传 zip 即装（更简单），v1 手动改 CSS 变量；另有 PHP 侧文案默认值与业务参数
   - title: 开发者 · 功能自定义教程
@@ -41,8 +43,10 @@ features:
 | 登录后台后不知道点哪 | [后台总览](/admin) |
 | 添加商品、选商品类型 | [商品管理](/admin/products) |
 | 配置在线支付 | [支付配置](/admin/payment) |
-| 配欲蓝服务器 | [欲蓝财务魔方](/yulan) 与 [Windows APP](/windows-app) |
-| 从零跑通魔方财务（下单自动建号交付） | [魔方财务使用教程](/yulan-guide) |
+| 对接上游财务系统 | [魔方财务（对接上游）](/yulan) |
+| 从零跑通魔方财务（添加上游→同步产品→下单交付） | [魔方财务使用教程](/yulan-guide) |
+| 卖 KVM 云主机、用户自助管理 | [魔方云](/cloud) |
+| 用户提单、客服受理 | [工单系统](/tickets) |
 | 上线前逐项打勾 | [上线自检清单](/deploy/checklist) |
 | 看每个版本改了什么 | [版本更新](/changelog) |
 | 做二次开发、加新功能 | [功能自定义 · 学习路线](/developer/custom)（10 篇教程） |
@@ -59,7 +63,6 @@ features:
 ## 相关仓库
 
 - 主仓库（系统源码 / Release 系统包）：[yulancloud/yulancloud](https://github.com/yulancloud/yulancloud)
-- Windows APP 仓库（exe 下载）：[yulancloud/yulancloudRubik-Windows](https://github.com/yulancloud/yulancloudRubik-Windows)
 - 插件市场（下载插件）：[yulancloud.us.ci/market](https://yulancloud.us.ci/market/)
 - 插件索引仓库（`plugins.json`）：[yulancloud/plugins](https://github.com/yulancloud/plugins)
 - 插件开发模板仓库（`Use this template`）：[yulancloud/plugin-template](https://github.com/yulancloud/plugin-template)

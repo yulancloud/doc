@@ -74,7 +74,7 @@ title: 09 安全规范与发布检查
 | --- | --- |
 | `tests/e2e.sh` | 基础下单 / 查询 / 后台流程 |
 | `tests/e2e_payment.sh` | 支付、回调、幂等、金额校验 |
-| `tests/e2e_yulan.sh` | 欲蓝建号、商品级服务器、旧库迁移、CSRF（64 项断言） |
+| `tests/e2e_yulan.sh` | 上游对接 / 云主机开通 / 工单归属隔离 / 旧库迁移 / CSRF（历史脚本名沿用） |
 | `tests/e2e_order.py`、`browser_check.py`、`site_check.sh` | 订单与页面级检查 |
 
 自测接口时记住三条：`Content-Type: application/json`、写操作带 `Origin`、后台接口带会话 Cookie。见 [01 入门](/developer/custom/start)。
