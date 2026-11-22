@@ -1,6 +1,6 @@
 # 欲蓝财务 · 官方文档
 
-> 当前文档对应系统 **v1.4.1**（健康检查 `build=20261121a`）。版本变化见 [`changelog.md`](source/pages/changelog.md)。
+> 当前文档对应系统 **v1.5.0**（健康检查 `build=20261122a`）。版本变化见 [`changelog.md`](source/pages/changelog.md)。
 
 线上站点： https://doc.yulancloud.us.ci/
 

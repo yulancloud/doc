@@ -6,6 +6,24 @@ title: 版本更新
 
 这里记录每个版本相对上一版的变化与升级要点。升级前请先备份 `data/shop.sqlite` 与 `config/.env`。
 
+## v1.5.0（内置智简魔方 v10 真实协议 · 修复对接上游 404）
+
+> 商城系统版本。`GET /api/health` 返回 `version=1.5.0`、`build=20261122a`。
+
+**核心修复：对接真实魔方上游全部 HTTP 404 的问题。**
+
+v1.4.x 的「对接上游」用的是一套自造协议（`/api/v1/products`、`Bearer api_key`、`/api/v1/orders` 等），mock 演示能跑，但连真实智简魔方 v10 / 魔方云时全部 404。为此我们研读了智简魔方 v10 开源源码（`AuthController` / `SupplierModel::apiAuth` / `idcsmart_api_curl` / `UpstreamLogic` / `ResModuleLogic`），据此重做对接：
+
+- **新增 `MofangApi` 适配器**：完整实现真实协议。
+  - 两阶段鉴权：先 `POST /api/v1/auth {username,password}` 换 JWT（老财务为 `/zjmf_api_login`），再以 `Authorization: Bearer <JWT>` 调业务接口；JWT 缓存 2 小时，遇 401/405 自动重登重试。
+  - 真实端点：产品 `GET /api/v1/product`（老财务 `/api/product/list`）；下单 `console/v1/cart → cart/settle → pay`（老财务 `cart/add_to_shop → cart/settle → apply_credit`）；操作 `POST /provision/default`。
+  - 正确解析 `{status:200, data:{list}}` 响应结构。
+- **支持三种上游协议**：`v10`（新魔方云/财务，推荐）、`finance`（老财务 zjmf_api）、`whmcs`（代理插件）。后台「上游管理」新增「上游协议」下拉，一般只需选协议、无需手填路径。
+- **默认路径修正 + 存量自动迁移**：`upstreams` 新增 `api_type` 列；迁移会把旧的错误默认路径自动改为真实端点，且不覆盖管理员自定义路径。
+- 沿用 v1.4.1 的在线更新长超时与解除执行时间限制修复。
+
+> 升级：下载 `yulan-shop-v150.zip` 覆盖站点（保留 `config/` 与 `data/`），执行 `php bin/migrate.php`，确认 `build=20261122a` 后强刷后台。详见[魔方财务（对接上游）](/yulan)与[使用教程](/yulan-guide)。
+
 ## v1.4.1（修复补丁 · 在线更新与对接上游）
 
 > 商城系统版本。`GET /api/health` 返回 `version=1.4.1`、`build=20261121a`。这是一个纯修复补丁，不新增表、不改存量数据结构。

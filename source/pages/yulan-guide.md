@@ -106,7 +106,7 @@ API 密钥保存后不会回显。再次编辑时留空 = 不修改；确认要�
 
 - 从旧版升到 v1.4：解压覆盖站点时**保留 `config/` 与 `data/`**，再执行 `php bin/migrate.php`（幂等，会新建 `upstreams / upstream_products / cloud_vms / tickets / ticket_replies` 五张表，并给 `products` 放开 cloud 类型、补 `upstream_id/upstream_product_id` 列，不丢历史数据）。
 - 也可用后台「在线更新」一键升级，会自动备份、覆盖程序文件并跑迁移，**保留你的主页设计、设置、商品和订单**。
-- 升级后 `GET /api/health` 应返回 `version=1.4.1`、`build=20261121a`；`Ctrl+F5` 强刷后台即可看到「魔方财务 · 上游管理」「魔方云 · 云主机」「工单管理」新菜单。详见[安装与升级](/deploy/install)与[版本更新](/changelog)。
+- 升级后 `GET /api/health` 应返回 `version=1.5.0`、`build=20261122a`；`Ctrl+F5` 强刷后台即可看到「魔方财务 · 上游管理」「魔方云 · 云主机」「工单管理」新菜单。详见[安装与升级](/deploy/install)与[版本更新](/changelog)。
 
 ## 相关文档
 
