@@ -23,3 +23,94 @@
 
 /* 结果卡片里的 refIndex 是调试信息，对外站点不必展示 */
 .press-result-score { display: none !important; }
+
+/* ============================================================
+   欲蓝财务 · 经典风格
+   与商城前台「经典」主题同一套视觉语言：沉稳品牌蓝 + 暖棕点缀、
+   Montserrat / Noto Sans SC 字体、大圆角与柔和阴影。
+   ============================================================ */
+:root {
+  --va-c-primary: #0b52d8;
+  --yl-blue: #0b52d8;
+  --yl-blue-ink: #0a3fa6;
+  --yl-blue-soft: #e8eefa;
+  --yl-warm: #a8703c;
+  --yl-ink-1: #12161c;
+  --yl-ink-2: #39434f;
+  --yl-ink-3: #6a7480;
+  --yl-surface: #f5f6f8;
+  --yl-hair: rgba(18, 22, 28, .07);
+  --yl-shadow: 0 2px 4px rgba(18, 22, 28, .04), 0 18px 40px -24px rgba(18, 22, 28, .28);
+  --yl-shadow-lg: 0 3px 6px rgba(18, 22, 28, .05), 0 32px 64px -28px rgba(18, 22, 28, .34);
+}
+
+/* 字体：与经典前台一致 */
+body, .press-home-hero, .press-home-features {
+  font-family: 'Montserrat', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ---------- Hero 大卡片 ---------- */
+.press-home-hero {
+  background: linear-gradient(180deg, #fff 0%, var(--yl-surface) 100%);
+}
+.press-home-hero .hero-name {
+  font-family: 'Montserrat', 'Noto Sans SC', sans-serif;
+  color: var(--yl-warm);
+  letter-spacing: .2em;
+}
+.press-home-hero .hero-text {
+  color: var(--yl-ink-1);
+  font-weight: 700;
+}
+.press-home-hero .hero-tagline {
+  color: var(--yl-ink-3);
+}
+.press-home-hero .hero-actions {
+  gap: 14px;
+}
+/* 主按钮：品牌蓝胶囊 + 柔和投影 */
+.press-home-hero .hero-actions a[theme='brand'],
+.press-home-hero .hero-actions .press-button--brand,
+.press-home-hero .hero-actions a:first-child {
+  border-radius: 999px !important;
+  background: var(--yl-blue) !important;
+  color: #fff !important;
+  box-shadow: var(--yl-shadow);
+}
+/* 次按钮：描边胶囊 */
+.press-home-hero .hero-actions a:last-child {
+  border-radius: 999px !important;
+  border: 1px solid var(--yl-hair) !important;
+  box-shadow: var(--yl-shadow);
+}
+
+/* ---------- Feature 装饰卡片 ---------- */
+.press-home-features {
+  background: var(--yl-surface);
+}
+.press-home-features .features-title {
+  color: var(--yl-ink-1);
+  font-weight: 600;
+}
+.press-features .press-feature-cell {
+  border: 1px solid var(--yl-hair) !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  box-shadow: var(--yl-shadow);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.press-features .press-feature-cell:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--yl-shadow-lg);
+}
+.press-features .press-feature-cell h3,
+.press-features .press-feature-cell .feature-title {
+  color: var(--yl-blue);
+}
+
+:root[data-theme='dark'] .press-home-hero {
+  background: linear-gradient(180deg, #15181d 0%, #0f1216 100%);
+}
+:root[data-theme='dark'] .press-home-features {
+  background: #0f1216;
+}
