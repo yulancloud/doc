@@ -4,7 +4,7 @@ title: 03 基础 API
 
 # 03 基础 API：路由、响应与鉴权
 
-这一篇把「加一个接口」讲透，是后面实战的地基。
+这一篇讲怎么加一个接口：路由怎么写、响应格式、参数校验和鉴权。后面实战会反复用到。
 
 ← [02 框架结构](/developer/custom/architecture) ｜ [04 数据库与迁移](/developer/custom/database) →
 
@@ -31,7 +31,7 @@ case str_starts_with($path, '/api/'):
 ```
 
 ::: warning 顺序就是优先级
-`/api/orders/quote` 的 case **必须写在** `/api/orders/{no}` 的正则 case 之前，否则 `quote` 会被当成订单号吃掉。新增带固定后缀的路由时，一律放在通配正则之前。
+`/api/orders/quote` 的 case 必须写在 `/api/orders/{no}` 的正则 case 之前，否则 `quote` 会被当成订单号吃掉。新增带固定后缀的路由时，一律放在通配正则之前。
 :::
 
 路径由 `Path::normalizeApi()` 归一化后再匹配，所以子目录部署（`/shop/api/orders`）也能命中，见 [02 框架结构](/developer/custom/architecture)。
@@ -55,7 +55,7 @@ case str_starts_with($path, '/api/'):
 | `Response::ok($data, $extra)` | 200，`{ok:true,data:...}` |
 | `Response::json($payload, $status)` | 自定义状态码，如 `Response::json(['ok'=>true,'data'=>$r], 201)` |
 | `Response::fail($code, $message, $status)` | 错误，`{ok:false,error:{code,message}}` |
-| `Response::plain($body, $status)` | **纯文本**，只给易支付回调吐 `success` / `fail` |
+| `Response::plain($body, $status)` | 纯文本，只给易支付回调吐 `success` / `fail` |
 
 ::: warning 支付回调不能 echo
 `api/index.php` 的 shutdown 守卫会把「没走 `Response::*` 的输出」当成脏输出转成 JSON 500，而网关只认纯文本 `success`，被转 JSON 会导致网关无限重试。必须调 `Response::plain('success')`。见 [08 支付扩展](/developer/custom/payment)。
@@ -82,7 +82,7 @@ case str_starts_with($path, '/api/'):
 
 - `Content-Type` 必须以 `application/json` 开头（否则 415）
 - body ≤ 64 KB（否则 413）
-- 必须是合法 JSON 且**顶层是对象**（否则 400）
+- 必须是合法 JSON 且顶层是对象（否则 400）
 - 空 body 直接 400
 
 GET 参数一律过 `Validator`：
@@ -92,17 +92,17 @@ $kw   = Validator::keyword($_GET['q'] ?? '');
 $page = Validator::int($_GET['page'] ?? null, 1, 1000, 1);
 ```
 
-自定义文本用 `Validator::text($v, $min, $max, $label)`，它会去掉控制字符、`trim`、按 `mb_strlen` 校验长度，失败直接返回 400。**数据库操作一律 PDO 预处理占位符**，不要拼接 SQL。
+自定义文本用 `Validator::text($v, $min, $max, $label)`，它会去掉控制字符、`trim`、按 `mb_strlen` 校验长度，失败直接返回 400。数据库操作一律 PDO 预处理占位符，不要拼接 SQL。
 
-## 四、三类接口的权限模型
+## 四、接口的权限模型
 
 | 类型 | 例子 | 必须做的 |
 | --- | --- | --- |
 | 公开只读 | `/api/catalog`、`/api/site`、`/api/products` | `RateLimiter::guard('read')` + `Validator` |
-| 公开写 | `/api/products/{id}/reviews` | 限流（如 `review`）+ 严格校验；**不要**套后台 CSRF |
+| 公开写 | `/api/products/{id}/reviews` | 限流（如 `review`）+ 严格校验；不要套后台 CSRF |
 | 后台 | `/api/admin/*` | `AdminAuth::require()`（登录 + CSRF）、敏感操作 `requireOwner()`、`Audit::log()` |
 | 前台用户 | `/api/console/*` | `UserAuth::require()` |
-| 支付回调 | `/api/pay/notify` | 验签 + 幂等，**不能**要求登录 / CSRF |
+| 支付回调 | `/api/pay/notify` | 验签 + 幂等，不能要求登录 / CSRF |
 
 ```php
 // 后台写接口的标准开头
@@ -114,7 +114,7 @@ Audit::log($u['id'], $u['username'], 'xxx_create', $id, $name);
 Response::json(['ok' => true, 'data' => ['id' => $id]], 201);
 ```
 
-`guardCsrf()` 比较 `Origin` / `Referer` 的 host + port，并兼容 `X-Forwarded-Host` 和 `SHOP_TRUSTED_ORIGINS`；**没有 `Origin` / `Referer` 的写请求一律 403**。所以 curl 自测后台接口必须带同源头。
+`guardCsrf()` 比较 `Origin` / `Referer` 的 host + port，并兼容 `X-Forwarded-Host` 和 `SHOP_TRUSTED_ORIGINS`；没有 `Origin` / `Referer` 的写请求一律 403。所以 curl 自测后台接口必须带同源头。
 
 限流规则写在 `config/config.php` 的 `rate_limit` 数组，新增动作时加一条：
 
@@ -134,7 +134,7 @@ case $path === '/api/ping' && $method === 'GET':
     Response::ok(['pong' => true, 'time' => date('c')]);
 ```
 
-然后**把路径加进文件末尾兜底的 `$known` 数组**（见第七节）：
+然后把路径加进文件末尾兜底的 `$known` 数组（见第七节）：
 
 ```php
 $known = [
@@ -177,7 +177,7 @@ curl -i -X POST http://127.0.0.1:8090/api/admin/cache/clear \
 
 ## 七、别忘了末尾的 `$known` 数组
 
-文件末尾的兜底 case 会区分「路径存在但方法不对」与「路径不存在」：命中 `$known`（或其正则）返回 **405**，否则 **404**。新增路由时不加进去，方法写错时你会看到 404 而不是 405，排查时容易误判成「路由没注册」。
+文件末尾的兜底 case 会区分「路径存在但方法不对」与「路径不存在」：命中 `$known`（或其正则）返回 405，否则 404。新增路由时不加进去，方法写错时你会看到 404 而不是 405，排查时容易误判成「路由没注册」。
 
 如果新路由带路径参数，还要往兜底里的正则组补一条，例如：
 

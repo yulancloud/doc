@@ -4,7 +4,7 @@ title: 05 实战：从零做一个功能
 
 # 05 实战：从零做一个完整功能
 
-把前四篇串起来，端到端做一个**访客留言板**：前台填表提交 → 存库 → 后台列表查看 / 删除。它不碰支付和订单，但会走完「建表 → 服务 → 路由 → 权限 → 后台 → 前台 → 测试」全部环节，是后续所有功能的模板。
+把前四篇串起来，端到端做一个访客留言板：前台填表提交 → 存库 → 后台列表查看 / 删除。它不碰支付和订单，但会走完「建表 → 服务 → 路由 → 权限 → 后台 → 前台 → 测试」全部环节，是后续所有功能的模板。
 
 ← [04 数据库与迁移](/developer/custom/database) ｜ [06 后台管理扩展](/developer/custom/admin) →
 
@@ -20,16 +20,16 @@ title: 05 实战：从零做一个功能
 示例是教学用最小实现，用来讲清机制。上线前请按 [09 安全规范](/developer/custom/security) 补齐（如验证码、敏感词、分页上限、内容审核）。
 :::
 
-## ① 备份
+## 1 备份
 
 ```bash
 cp data/shop.sqlite data/shop.sqlite.bak-dev-$(date +%Y%m%d-%H%M)
 cp -r config config.bak-dev
 ```
 
-## ② 建表：新装 + 升级两条路
+## 2 建表：新装 + 升级两条路
 
-**`database/schema.sql`**（全新安装的库）：
+`database/schema.sql`（全新安装的库）：
 
 ```sql
 CREATE TABLE IF NOT EXISTS guestbook (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS guestbook (
 CREATE INDEX IF NOT EXISTS idx_guestbook_created ON guestbook (created_at DESC);
 ```
 
-**`bin/migrate.php`**（旧库升级）。检测阶段加：
+`bin/migrate.php`（旧库升级）。检测阶段加：
 
 ```php
 if (!tableExists($pdo, 'guestbook')) {
@@ -64,7 +64,7 @@ if (!tableExists($pdo, 'guestbook')) {
 }
 ```
 
-## ③ 限流规则
+## 3 限流规则
 
 `config/config.php` 的 `rate_limit` 数组加一条：
 
@@ -72,7 +72,7 @@ if (!tableExists($pdo, 'guestbook')) {
 'guestbook' => ['window' => 600, 'max' => 5],   // 同一 IP 10 分钟最多 5 条
 ```
 
-## ④ 服务类 `src/GuestbookService.php`
+## 4 服务类 `src/GuestbookService.php`
 
 ```php
 <?php
@@ -117,9 +117,9 @@ final class GuestbookService
 }
 ```
 
-要点：**全是占位符**、`Validator::text` 统一校验、IP 只存哈希、分页 `LIMIT/OFFSET` 用 `bindValue`。
+要点：全是占位符、`Validator::text` 统一校验、IP 只存哈希、分页 `LIMIT/OFFSET` 用 `bindValue`。
 
-## ⑤ 注册路由
+## 5 注册路由
 
 `public/api/index.php` 顶部 `require_once` 区加一行：
 
@@ -154,7 +154,7 @@ case preg_match('#^/api/admin/guestbook/(\d+)$#', $path, $m) === 1 && $method ==
     Response::ok(['id' => $id]);
 ```
 
-**末尾 `$known` 数组**加：
+末尾 `$known` 数组加：
 
 ```php
 $known = [
@@ -164,7 +164,7 @@ $known = [
 // || preg_match('#^/api/admin/guestbook/\d+$#', $path) === 1
 ```
 
-## ⑥ 后台：菜单 + 视图
+## 6 后台：菜单 + 视图
 
 `public/admin/index.html` 侧栏加一个按钮（照抄其它 `.side__link`）：
 
@@ -207,9 +207,9 @@ window.AdminViews = {
 };
 ```
 
-> `AdminAPI.get/post/put/del` 是已导出的通用方法，内部自动拼 `/api/admin` 前缀、带 `credentials: 'same-origin'`、把响应拆包成 `data`，所以新接口**不用改 `admin/assets/api.js`**。所有拼进 `innerHTML` 的文本必须过 `U.esc()`。详见 [06 后台管理扩展](/developer/custom/admin)。
+> `AdminAPI.get/post/put/del` 是已导出的通用方法，内部自动拼 `/api/admin` 前缀、带 `credentials: 'same-origin'`、把响应拆包成 `data`，所以新接口不用改 `admin/assets/api.js`。所有拼进 `innerHTML` 的文本必须过 `U.esc()`。详见 [06 后台管理扩展](/developer/custom/admin)。
 
-## ⑦ 前台：表单 + 提交
+## 7 前台：表单 + 提交
 
 在 `public/assets/api.js` 的 `window.ShopAPI` 里加一个方法（推荐，统一错误处理）：
 
@@ -246,9 +246,9 @@ shopBoot(function () {
 
 `shopBoot()` 会等 `api.js` 数据就绪再执行，见 [07 前台数据流](/developer/custom/frontend)。
 
-## ⑧ bump 版本号 + 强刷
+## 8 bump 版本号 + 强刷
 
-改了 `api.js` / 新增 HTML，必须把**全站** HTML 的 `?v=` 一起换掉：
+改了 `api.js` / 新增 HTML，必须把全站 HTML 的 `?v=` 一起换掉：
 
 ```bash
 cd /path/to/shop
@@ -257,7 +257,7 @@ find public -name '*.html' -print0 | xargs -0 sed -i 's/v=20261116e/v=20261115b/
 
 然后浏览器 `Ctrl+F5`（或开无痕窗口）。
 
-## ⑨ 测试清单
+## 9 测试清单
 
 ```bash
 # 1) 迁移：先看清单再执行
@@ -287,16 +287,16 @@ curl -i -X DELETE http://127.0.0.1:8090/api/admin/guestbook/1 \
 bash tests/e2e.sh
 ```
 
-## ⑩ 回看：这 8 步对应哪一篇
+## 10 回看：这 8 步对应哪一篇
 
 | 步骤 | 对应篇章 |
 | --- | --- |
-| ②④ 建表 / 迁移 | [04 数据库与迁移](/developer/custom/database) |
-| ③ 限流、④⑤ 校验与响应 | [03 基础 API](/developer/custom/api) |
-| ④⑤ 服务层 / 路由 / 鉴权 | [02 框架结构](/developer/custom/architecture) |
-| ⑥ 后台菜单与视图 | [06 后台管理扩展](/developer/custom/admin) |
-| ⑦ 前台表单与 `shopBoot` | [07 前台数据流](/developer/custom/frontend) |
-| ⑧⑨ 版本号 / 测试 / 安全自检 | [09 安全规范与发布检查](/developer/custom/security) |
+| 2、4 建表 / 迁移 | [04 数据库与迁移](/developer/custom/database) |
+| 3 限流、4、5 校验与响应 | [03 基础 API](/developer/custom/api) |
+| 4、5 服务层 / 路由 / 鉴权 | [02 框架结构](/developer/custom/architecture) |
+| 6 后台菜单与视图 | [06 后台管理扩展](/developer/custom/admin) |
+| 7 前台表单与 `shopBoot` | [07 前台数据流](/developer/custom/frontend) |
+| 8、9 版本号 / 测试 / 安全自检 | [09 安全规范与发布检查](/developer/custom/security) |
 
 ## 常见翻车点
 

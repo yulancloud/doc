@@ -4,7 +4,7 @@ title: 09 安全规范与发布检查
 
 # 09 安全规范与发布检查
 
-最后一篇：把前面写的功能**安全地交出去**。这是一份可以逐项打勾的清单。
+最后一篇讲怎么把前面写的功能安全发布。下面是一份可以逐项打勾的清单。
 
 ← [08 支付 / 发货扩展](/developer/custom/payment) ｜ [回到学习路线](/developer/custom) →
 
@@ -15,9 +15,9 @@ title: 09 安全规范与发布检查
 | SQL 注入 | `Db::conn()` 真预处理（`EMULATE_PREPARES=false`） | 一律 `?` / `:name` 占位符，绝不拼 SQL |
 | CSRF | `AdminAuth::require()` → `guardCsrf()` 校验 `Origin`/`Referer` host+port | 后台写接口必须调 `require()`；公开写接口用限流 + 严格校验 |
 | 存储型 XSS | 前台 `textContent` / `U.esc()`，后台 `U.esc()` | 拼 `innerHTML` 的所有外部文本都要转义 |
-| 密钥 | 商户密钥、服务器口令**只写不读**，不进 `publicPayload()`、不进日志 | 新密钥类字段照此办理 |
+| 密钥 | 商户密钥、服务器口令只写不读，不进 `publicPayload()`、不进日志 | 新密钥类字段照此办理 |
 | 限流 | `RateLimiter::guard()` 按 IP 哈希分桶，规则在 `config.php` | 每个公开写接口都要挂一条规则 |
-| 安装锁 | `config/installed.lock`，已装后 `/api/install` 403 | **升级时整个 `config/` 不能删** |
+| 安装锁 | `config/installed.lock`，已装后 `/api/install` 403 | 升级时整个 `config/` 不能删 |
 | 敏感文件 | `router.php` 对 `data/` `config/` `src/` `.env` `*.sqlite` 等一律 404 | 新增敏感文件放到 Web 根之外 |
 | 响应纯净 | 四道闸保证 `/api/*` 只吐 JSON；`Response` 统一发安全头 | 别 `echo`，一律走 `Response::*` |
 | Host 伪造 | `SHOP_BASE_URL` 显式配置；`SHOP_TRUSTED_ORIGINS` 处理反代 | 生产环境配好这两项 |
@@ -63,10 +63,10 @@ title: 09 安全规范与发布检查
 ```
 
 ::: danger 升级时 `config/` 整个目录都不能删
-里面有 `config/installed.lock` 安装锁。删了会被判定「未安装」：`/install` 安装向导重新出现、全站 API 返回 503「站点尚未安装」，`config/.env` 的支付参数也一起丢失。恢复办法是从备份还原整个 `config/`，**别在向导里重装**（会覆盖店主账号）。详见 [安装与升级](/deploy/install) 第四节。
+里面有 `config/installed.lock` 安装锁。删了会被判定「未安装」：`/install` 安装向导重新出现、全站 API 返回 503「站点尚未安装」，`config/.env` 的支付参数也一起丢失。恢复办法是从备份还原整个 `config/`，别在向导里重装（会覆盖店主账号）。详见 [安装与升级](/deploy/install) 第四节。
 :::
 
-从 Release 整目录覆盖时，`style.css`、`SettingsService.php`、`config.php`、各 HTML **都会被还原成官方版本**。把自己的定制整理成一份补丁或单独记录，每次升级后重新套用，见 [版本更新](/changelog) 与 [主题定制设置](/developer/theme)。
+从 Release 整目录覆盖时，`style.css`、`SettingsService.php`、`config.php`、各 HTML 都会被还原成官方版本。把自己的定制整理成一份补丁或单独记录，每次升级后重新套用，见 [版本更新](/changelog) 与 [主题定制设置](/developer/theme)。
 
 ## 四、测试脚本
 

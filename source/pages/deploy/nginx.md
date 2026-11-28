@@ -4,13 +4,13 @@ title: Nginx 部署（需伪静态）
 
 # Nginx 部署（需要伪静态）
 
-Nginx **不会自动识别虚拟路径**，所以必须手工配置重写规则。分两种场景，任选其一：
+Nginx 不会自动识别虚拟路径，所以必须手工配置重写规则。分两种场景，任选其一：
 
-- **A. 宝塔面板**：在站点「伪静态」框里粘一段规则，PHP 解析由宝塔自带的 `\.php` 正则规则负责 —— 最省事
-- **B. 手写完整 server 配置**：直接用仓库里 `deploy/` 的配置样例 —— 适合不用面板的机器
+- A. 宝塔面板：在站点「伪静态」框里粘一段规则，PHP 解析由宝塔自带的 `\.php` 正则规则负责 —— 最省事
+- B. 手写完整 server 配置：直接用仓库里 `deploy/` 的配置样例 —— 适合不用面板的机器
 
 ::: warning
-两种方式**不要混用**。手写完整配置时若沿用面板那份 `try_files`，会踩到 PHP 源码泄露的坑，详见 B 段说明。
+两种方式不要混用。手写完整配置时若沿用面板那份 `try_files`，会踩到 PHP 源码泄露的坑，详见 B 段说明。
 :::
 
 ## 共同第一步：运行目录与 PHP
@@ -28,7 +28,7 @@ Nginx **不会自动识别虚拟路径**，所以必须手工配置重写规则�
 
 ## A. 宝塔面板：填伪静态
 
-进入 **网站 → 设置 → 伪静态**，把下面这段完整粘进去并保存：
+进入 网站 → 设置 → 伪静态，把下面这段完整粘进去并保存：
 
 ```nginx
 location /api/ {
@@ -52,14 +52,14 @@ location ^~ /console/ {
 
 | 规则 | 作用 |
 | --- | --- |
-| `location /api/` | 所有接口转给 `api/index.php`。注意是**普通前缀**（不带 `^~`），这样 `/api/index.php` 仍会被宝塔的 `\.php` 正则接走、交给 PHP-FPM 解析 |
+| `location /api/` | 所有接口转给 `api/index.php`。注意是普通前缀（不带 `^~`），这样 `/api/index.php` 仍会被宝塔的 `\.php` 正则接走、交给 PHP-FPM 解析 |
 | `location ~ ^/(admin\|console\|install)$` | 不带斜杠时 301 补斜杠，避免后台相对资源加载失败 |
 | `location = /install/` | 安装向导指向 `install.html` |
 | `location ^~ /admin/` | 后台页面指向 `admin/index.html` |
 | `location ^~ /console/` | 用户中心指向 `console/index.html` |
 
 ::: tip 为什么 `/api/` 不能写成 `location ^~ /api/`
-`^~` 是「前缀命中后不再尝试正则」，优先级高于 `\.php` 正则。一旦这么写，`/api/index.php` 会被当成静态文件直接返回 **PHP 源码**，配置与密钥全泄露。面板场景务必保留上面那份普通前缀写法。
+`^~` 是「前缀命中后不再尝试正则」，优先级高于 `\.php` 正则。一旦这么写，`/api/index.php` 会被当成静态文件直接返回 PHP 源码，配置与密钥全泄露。面板场景务必保留上面那份普通前缀写法。
 :::
 
 ### 保存后验证
@@ -94,7 +94,7 @@ nginx -t && systemctl reload nginx
 
 ### 与面板规则的关键差别
 
-完整配置里，`/api/` 必须**直接交给 PHP-FPM**，不能用 `try_files` 静态兜底：
+完整配置里，`/api/` 必须直接交给 PHP-FPM，不能用 `try_files` 静态兜底：
 
 ```nginx
 location ^~ /api/ {
@@ -109,7 +109,7 @@ location ^~ /api/ {
 
 原因：`/api/index.php` 是磁盘上真实存在的文件，`try_files $uri /api/index.php` 的第一个参数会直接命中它，Nginx 便以静态文件返回源码。这是 2026-11-14 线上实际发生过的故障（`/api/install/status` 返回 `application/octet-stream` 的 PHP 源码，导致安装页 JSON 解析失败）。
 
-另外，配置文件里还包含这些**必须保留**的闸门：
+另外，配置文件里还包含这些必须保留的闸门：
 
 - `\.php` 正则段：只放行 `router.php` 与 `api/index.php`，其余 PHP（含 `src/`、`bin/`）一律 404
 - 敏感后缀（`.sqlite`、`.env`、`.bak`、`.zip`…）一律 404

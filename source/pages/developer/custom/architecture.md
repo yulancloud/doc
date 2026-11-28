@@ -4,7 +4,7 @@ title: 02 框架结构与请求生命周期
 
 # 02 框架结构与请求生命周期
 
-读懂这一页，后面加接口、建表、做页面都不会找错文件。
+这一页讲清框架的层次和一次请求走过的路径，后面加接口、建表、做页面时用来对照。
 
 ← [01 入门与本地环境](/developer/custom/start) ｜ [03 基础 API](/developer/custom/api) →
 
@@ -13,7 +13,7 @@ title: 02 框架结构与请求生命周期
 | 文件 | 职责 | 由谁调用 |
 | --- | --- | --- |
 | `public/router.php` | 静态资源、敏感文件 404、虚拟路由（`/install` `/admin` `/console`）、把 `/api/*` 转给 API 入口 | PHP 内置服务器；Nginx / Apache 下由伪静态规则承担对应职责 |
-| `public/api/index.php` | **所有 `/api/*` 的业务路由**（单文件约 1090 行） | `router.php` 或 Nginx 伪静态 |
+| `public/api/index.php` | 所有 `/api/*` 的业务路由（单文件约 1090 行） | `router.php` 或 Nginx 伪静态 |
 
 `public/preflight.php` 在两个入口最前面执行，负责 PHP ≥ 8.1 与扩展检查；它刻意保持 PHP 5.6 也能解析的语法，这样低版本服务器能先看到一张可读的说明页，而不是裸 Parse error。
 
@@ -40,17 +40,17 @@ title: 02 框架结构与请求生命周期
 
 四个必须记住的细节：
 
-- ③ 有**四道闸**（关显示 / 输出缓冲 / 错误转 JSON / 输出前清缓冲），保证 `/api/*` 永远只吐纯 JSON。PHP warning 只进日志；致命错误会被转成结构化的 `server_error`，前端不会 `JSON.parse` 失败。
-- ⑤ 未安装时只有 `/api/install`、`/api/health`、`/api/site`、`/api/install/status` 四个白名单放行，其余一律 503「站点尚未安装」。
-- ⑦ `AdminAuth::require()` = 取登录态 + `guardCsrf()`；后者只对非 `GET/HEAD/OPTIONS` 生效，比较 `Origin` / `Referer` 的 host + port，并兼容 `X-Forwarded-Host` 与 `SHOP_TRUSTED_ORIGINS`。
-- ⑪ `Response::ok()` / `fail()` 内部会 `exit`，所以 case 里**不需要 return 或 break**。
+- 3 引导层有四道闸（关显示 / 输出缓冲 / 错误转 JSON / 输出前清缓冲），保证 `/api/*` 永远只吐纯 JSON。PHP warning 只进日志；致命错误会被转成结构化的 `server_error`，前端不会 `JSON.parse` 失败。
+- 5 安装门禁：未安装时只有 `/api/install`、`/api/health`、`/api/site`、`/api/install/status` 四个白名单放行，其余一律 503「站点尚未安装」。
+- 7 权限层：`AdminAuth::require()` = 取登录态 + `guardCsrf()`；后者只对非 `GET/HEAD/OPTIONS` 生效，比较 `Origin` / `Referer` 的 host + port，并兼容 `X-Forwarded-Host` 与 `SHOP_TRUSTED_ORIGINS`。
+- 11 `Response::ok()` / `fail()` 内部会 `exit`，所以 case 里不需要 return 或 break。
 
 ## 三、分层与目录地图
 
 | 层 | 位置 | 职责 |
 | --- | --- | --- |
 | 入口 | `public/router.php`、`public/api/index.php`、`public/preflight.php` | 分发与版本守卫 |
-| 基础设施 | `src/Db.php`、`Response.php`、`Validator.php`、`RateLimiter.php`、`Path.php`、`Env.php`、`Audit.php` | 被所有业务复用，**优先复用，别自己造** |
+| 基础设施 | `src/Db.php`、`Response.php`、`Validator.php`、`RateLimiter.php`、`Path.php`、`Env.php`、`Audit.php` | 被所有业务复用，优先复用，别自己造 |
 | 服务层 | `src/*Service.php`、`EPay.php`、`YulanConnector.php`、`YulanProvision.php`、`AdminAuth.php`、`UserAuth.php`、`Installer.php` | 业务规则 |
 | 仓储 | `src/ProductRepo.php` | 前台商品读取与数据整形 |
 | 数据 | `database/schema.sql`、`schema_v5.sql`、`bin/migrate.php`、`bin/init_db.php` | 表结构与升级 |
@@ -65,7 +65,7 @@ title: 02 框架结构与请求生命周期
 
 | 类 | 常用方法 | 说明 |
 | --- | --- | --- |
-| `Db` | `conn()`、`tx(callable)` | PDO + SQLite；`ERRMODE_EXCEPTION`、`EMULATE_PREPARES=false`、`foreign_keys=ON`、WAL；`tx()` 自动回滚，**已在外层事务中时直接复用**（SQLite 不支持嵌套） |
+| `Db` | `conn()`、`tx(callable)` | PDO + SQLite；`ERRMODE_EXCEPTION`、`EMULATE_PREPARES=false`、`foreign_keys=ON`、WAL；`tx()` 自动回滚，已在外层事务中时直接复用（SQLite 不支持嵌套） |
 | `Response` | `ok()`、`fail()`、`json()`、`plain()`、`headers()` | 统一 JSON + 安全响应头；`plain()` 专供支付回调吐纯文本 |
 | `Validator` | `text()`、`int()`、`productId()`、`categoryId()`、`keyword()`、`sort()`、`personName()`、`phone()`、`address()`、`orderNo()`、`idempotencyKey()` | 校验失败直接 `Response::fail()` 终止 |
 | `RateLimiter` | `guard($action)`、`hit()`、`clientIp()`、`ipHash()` | 按 IP 的 SHA-256 分桶，规则在 `config.php` 的 `rate_limit`；只信任 `REMOTE_ADDR` |
@@ -88,7 +88,7 @@ title: 02 框架结构与请求生命周期
 | 后台 | `admin_users`、`admin_sessions`、`admin_audit`、`rate_limits` |
 | 其它 | `schema_meta`、`yulan_accounts` |
 
-`bin/init_db.php` 会依次执行 `database/schema.sql` 与 `schema_v5.sql` 建全新库；`bin/migrate.php` 负责把**旧库**补到当前结构。加表 / 加列时两边都要写，见 [04 数据库与迁移](/developer/custom/database)。
+`bin/init_db.php` 会依次执行 `database/schema.sql` 与 `schema_v5.sql` 建全新库；`bin/migrate.php` 负责把旧库补到当前结构。加表 / 加列时两边都要写，见 [04 数据库与迁移](/developer/custom/database)。
 
 ::: warning 金额一律用「分」的整数
 `price_cents`、`paid_cents`、运费、余额都是整数分，只有后台「运费设置」为了店主直观用「元」填写、服务端换算。新增金额字段时别用浮点，避免精度误差。
@@ -113,7 +113,7 @@ title: 02 框架结构与请求生命周期
 - 前台 `public/assets/api.js` → `window.ShopAPI`（`get` / `post` 封装、`catalog`、`product`、`createOrder`、`quote` …）
 - 后台 `public/admin/assets/api.js` → `window.AdminAPI` 与 `window.AdminU`（工具与转义）
 
-**加载顺序不能乱**：前台 `data.js → api.js → 页面脚本`；后台 `api.js → views.js → views-v5.js → app.js`。页面脚本通过 `window.shopBoot(fn)` 注册，等数据就绪才执行。
+加载顺序不能乱：前台 `data.js → api.js → 页面脚本`；后台 `api.js → views.js → views-v5.js → app.js`。页面脚本通过 `window.shopBoot(fn)` 注册，等数据就绪才执行。
 
 ## 七、配置优先级（从高到低）
 
@@ -147,7 +147,7 @@ title: 02 框架结构与请求生命周期
 - 前端 `api.js` 的 `detectApiBase()` 从 `location.pathname` 推断基址（也可由 `window.SHOP_API_BASE` 或 `<meta name="shop-api-base">` 显式指定）
 - 后端 `Path::normalizeApi()` 把 `/shop/api/orders` 归一成 `/api/orders`
 
-写死 `/api` 或漏配伪静态，页面会**静默回退到 `data.js` 静态数据**看起来正常，只有点下单才 404。排查先看 `<html>` 的 `data-api-source` 属性和 Network 里请求的实际 URL。
+写死 `/api` 或漏配伪静态，页面会静默回退到 `data.js` 静态数据，看起来正常，只有点下单才 404。排查先看 `<html>` 的 `data-api-source` 属性和 Network 里请求的实际 URL。
 
 ---
 

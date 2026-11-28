@@ -4,7 +4,7 @@ title: 06 后台管理扩展
 
 # 06 后台管理扩展
 
-后台是**原生 JS 的 hash 路由单页**，没有框架、没有构建。理解「菜单按钮 → 视图对象 → 主控路由」这条链，加页面就是三步。
+后台是原生 JS 的 hash 路由单页，没有框架、没有构建。理解「菜单按钮 → 视图对象 → 主控路由」这条链，加页面就是三步。
 
 ← [05 实战](/developer/custom/first-feature) ｜ [07 前台数据流](/developer/custom/frontend) →
 
@@ -27,12 +27,12 @@ public/admin/index.html
 | `assets/app.js` | 登录校验、hash 路由 `go(name)`、抽屉、退出登录 |
 
 ::: warning 加载顺序不能改
-`views.js` 在顶部取 `window.AdminAPI` / `window.AdminU`，`app.js` 取 `window.AdminViews`。顺序错了会直接 `undefined`。四个文件都要带**同一个** `?v=` 版本号。
+`views.js` 在顶部取 `window.AdminAPI` / `window.AdminU`，`app.js` 取 `window.AdminViews`。顺序错了会直接 `undefined`。四个文件都要带同一个 `?v=` 版本号。
 :::
 
 ## 二、加一个菜单页（三步）
 
-**① `public/admin/index.html`** 侧栏加按钮，`data-view` 的值就是视图名：
+1) `public/admin/index.html`：侧栏加按钮，`data-view` 的值就是视图名：
 
 ```html
 <button class="side__link" data-view="guestbook" type="button">
@@ -40,7 +40,7 @@ public/admin/index.html
 </button>
 ```
 
-**② `public/admin/assets/views.js`** 定义视图并注册：
+2) `public/admin/assets/views.js`：定义视图并注册：
 
 ```js
 var guestbook = {
@@ -61,7 +61,7 @@ window.AdminViews = {
 };
 ```
 
-**③ 无需改 `app.js`**：`go(name)` 的白名单**以实际注册的视图对象为准**，不再依赖硬编码数组：
+3) 无需改 `app.js`：`go(name)` 的白名单以实际注册的视图对象为准，不再依赖硬编码数组：
 
 ```js
 function go(name) {
@@ -76,8 +76,8 @@ function go(name) {
 
 | 积木 | 来源 | 用途 |
 | --- | --- | --- |
-| `API.get/post/put/del(path, body)` | `AdminAPI` | 通用请求，**自动拼 `/api/admin` 前缀**；带 `credentials:'same-origin'`、超时 15s、401 自动跳登录、把响应拆包成 `data` |
-| `U.esc(s)` | `AdminU` | HTML 转义，**所有拼进 `innerHTML` 的文本必须过它** |
+| `API.get/post/put/del(path, body)` | `AdminAPI` | 通用请求，自动拼 `/api/admin` 前缀；带 `credentials:'same-origin'`、超时 15s、401 自动跳登录、把响应拆包成 `data` |
+| `U.esc(s)` | `AdminU` | HTML 转义，所有拼进 `innerHTML` 的文本必须过它 |
 | `U.toast(msg, kind)` / `U.confirm(msg)` | `AdminU` | 轻提示 / 确认 |
 | `U.money(cents)` / `U.yuan(cents)` / `U.toCents(v)` | `AdminU` | 分 ↔ 元换算 |
 | `U.time(s)` / `U.ago(s)` | `AdminU` | 时间格式化 |
@@ -105,11 +105,11 @@ saveSettingsFields(btn, fields, okMsg, onSaved)  // 收集并 PUT 保存
 新增一个后台可配参数时：
 
 1. `src/SettingsService.php` 的 `DEFAULTS` 加键（白名单 + 默认值 + `max`）
-2. 若要下发前台，加进 `publicPayload()`；**密钥类键绝不能加**
+2. 若要下发前台，加进 `publicPayload()`；密钥类键绝不能加
 3. 后台 `views.js` 对应字段表加一项
 4. bump 版本号 + 强刷
 
-`SettingsService::save()` 是**部分更新**：只写传入的键；密钥类字段「只写不读」，GET 不回显，输入框留空表示不修改。详见 [PHP 配置与文案默认值](/developer/config)。
+`SettingsService::save()` 是部分更新：只写传入的键；密钥类字段「只写不读」，GET 不回显，输入框留空表示不修改。详见 [PHP 配置与文案默认值](/developer/config)。
 
 ## 五、权限与审计
 
@@ -120,7 +120,7 @@ saveSettingsFields(btn, fields, okMsg, onSaved)  // 收集并 PUT 保存
 | 记录操作 | 后端 `Audit::log($u['id'], $u['username'], '动作', '目标', '备注')`，写入 `admin_audit` |
 | 敏感视图隐藏 | 侧栏按钮加 `hidden`，登录后按角色决定是否显示（参考 `#nav-audit-link`） |
 
-**权限判断必须放后端**。前端隐藏按钮只是体验，接口本身要自己拦。审计日志不要写密码、密钥、完整手机号（`Audit.php` 已做长度截断）。
+权限判断必须放后端。前端隐藏按钮只是体验，接口本身要自己拦。审计日志不要写密码、密钥、完整手机号（`Audit.php` 已做长度截断）。
 
 ## 六、`views-v5.js` 为什么要惰性委托
 
@@ -137,7 +137,7 @@ users: {
 }
 ```
 
-因为 `views-v5.js` **在 views.js 之后加载**，注册时取值会是 `undefined`。后加的扩展视图都照这个模式写，避免踩「视图找不着」的坑。
+因为 `views-v5.js` 在 views.js 之后加载，注册时取值会是 `undefined`。后加的扩展视图都照这个模式写，避免踩「视图找不着」的坑。
 
 ## 七、常见坑
 

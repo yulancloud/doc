@@ -4,7 +4,7 @@ title: 07 前台数据流与交互
 
 # 07 前台数据流与交互
 
-前台也是原生 JS，但有一层**数据适配 + 静态兜底**机制。不搞懂它，很容易出现「后台改了前台不变」或「我加的页面读不到数据」。
+前台也是原生 JS，但有一层数据适配 + 静态兜底机制。不弄清它，很容易遇到「后台改了前台不变」或「新加的页面读不到数据」。
 
 ← [06 后台管理扩展](/developer/custom/admin) ｜ [08 支付 / 发货扩展](/developer/custom/payment) →
 
@@ -18,7 +18,7 @@ public/assets/api.js      数据适配层 → window.ShopAPI / window.SHOP
 页面内联脚本 / app.js     通过 window.shopBoot(fn) 注册启动逻辑
 ```
 
-`api.js` 会**优先请求 PHP 接口**，成功就把真实数据覆盖到 `window.SHOP`；接口不可用（纯静态托管）时回退到 `data.js`，页面照常能看，但后台改动自然不生效。
+`api.js` 会优先请求 PHP 接口，成功就把真实数据覆盖到 `window.SHOP`；接口不可用（纯静态托管）时回退到 `data.js`，页面照常能看，但后台改动自然不生效。
 
 判断当前数据源：看 `<html>` 上的 `data-api-source` 属性 —— `api` 表示连上了后端，`static` 表示走兜底。
 
@@ -50,7 +50,7 @@ public/assets/api.js      数据适配层 → window.ShopAPI / window.SHOP
 | `me()`、`recharge(...)` | 前台用户与充值 |
 | `state`、`apiBase`、`newIdempotencyKey()` | 状态 / 基址 / 幂等键生成 |
 
-内部 `get()` / `post()` 统一处理错误码与友好提示（如 `not_installed`、`payment_not_configured`）。**新增前台接口时建议在这里加一个方法**，而不是在页面里裸 `fetch`，这样错误提示、超时、JSON 解析都一致。见 [05 实战](/developer/custom/first-feature) 的 `postGuestbook`。
+内部 `get()` / `post()` 统一处理错误码与友好提示（如 `not_installed`、`payment_not_configured`）。新增前台接口时建议在这里加一个方法，而不是在页面里裸 `fetch`，这样错误提示、超时、JSON 解析都一致。见 [05 实战](/developer/custom/first-feature) 的 `postGuestbook`。
 
 `window.SHOP` 是聚合后的数据对象：`categories`、`products`、当前商品等，由 `mergeCatalog()` / `mergeProduct()` 写入。
 
@@ -69,7 +69,7 @@ app.js 的 queueStream() 看到 READY（或等 shop:ready / 2.6s 兜底）才启
 ```
 
 ::: warning v1.1 修过的真实 bug
-旧版打字动画在 API 返回**之前**就用 HTML 里写死的文案开始播放，动画结束时又把旧文案写回元素，把后台设置的新文案覆盖掉，表现就是「后台改了前台没变」。现在动画结束时读取的是**最新的 `data-stream` 属性**，且必须等站点文案就绪才启动。自定义带打字效果的文案时，务必沿用 `data-site-stream` + `STREAM_SLOTS` 映射，别自己起定时器。
+旧版打字动画在 API 返回之前就用 HTML 里写死的文案开始播放，动画结束时又把旧文案写回元素，把后台设置的新文案覆盖掉，表现就是「后台改了前台没变」。现在动画结束时读取的是最新的 `data-stream` 属性，且必须等站点文案就绪才启动。自定义带打字效果的文案时，务必沿用 `data-site-stream` + `STREAM_SLOTS` 映射，别自己起定时器。
 :::
 
 页面脚本一律这样注册：
@@ -105,12 +105,12 @@ window.shopBoot(function () {
 2. 需要接口数据 → 在 `api.js` 的 `ShopAPI` 加方法
 3. 页面逻辑用 `window.shopBoot(fn)` 包起来
 4. 所有来自接口 / 用户输入的文本用 `U.esc()` 或 `textContent`（`product.html` 里已有 `U.esc`）
-5. **bump 全站 `?v=` 版本号**并 `Ctrl+F5`
+5. bump 全站 `?v=` 版本号并 `Ctrl+F5`
 6. 验证 `<html data-api-source="api">`，看 Network 里 `/api/site`、`/api/catalog` 的返回
 
 ## 七、缓存与版本号
 
-`public/router.php` 对 `css/js/html` 发 `Cache-Control: no-cache` + `Last-Modified` 协商缓存，图片字体才长缓存；HTML 用 `no-store`。但**浏览器、CDN、Cloudflare 仍可能缓存带 `?v=` 的 URL**，所以改 JS / CSS 后统一换版本号最稳：
+`public/router.php` 对 `css/js/html` 发 `Cache-Control: no-cache` + `Last-Modified` 协商缓存，图片字体才长缓存；HTML 用 `no-store`。但浏览器、CDN、Cloudflare 仍可能缓存带 `?v=` 的 URL，所以改 JS / CSS 后统一换版本号最稳：
 
 ```bash
 find public -name '*.html' -print0 | xargs -0 sed -i 's/v=20261116e/v=你的新版本号/g'

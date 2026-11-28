@@ -4,7 +4,7 @@ title: Apache 部署（免伪静态）
 
 # Apache 部署（不需要伪静态）
 
-项目已经在 `public/.htaccess` 里写好了全部重写规则。Apache 会自动读取它，所以 **「伪静态」框里什么都不用填**——那个框是 Nginx 专用的，Apache 环境填了反而可能冲突。
+项目已经在 `public/.htaccess` 里写好了全部重写规则，Apache 会自动读取它。所以「伪静态」框留空就行——那个框是给 Nginx 用的，Apache 下填了反而可能冲突。
 
 ## 一、只需要三个前提
 
@@ -14,7 +14,7 @@ title: Apache 部署（免伪静态）
 | `mod_rewrite` 已启用 | `a2enmod rewrite` 或宝塔里确认模块已开 |
 | `AllowOverride All` | 站点 `<Directory>` 段允许 `.htaccess` 覆盖配置 |
 
-宝塔面板（Apache 环境）通常在 **网站 → 设置 → 配置文件** 里确认这段：
+宝塔面板（Apache 环境）一般在 网站 → 设置 → 配置文件 里确认这段：
 
 ```apache
 <Directory /www/wwwroot/你的域名/public>
@@ -97,7 +97,7 @@ RewriteBase /shop/
 
 | | Nginx | Apache |
 | --- | --- | --- |
-| 伪静态框 | **必须手填** | **留空** |
+| 伪静态框 | 必须手填 | 留空 |
 | 重写规则来源 | 面板里粘的那段 | 项目自带 `public/.htaccess` |
 | 额外开关 | PHP-FPM 解析规则 | `mod_rewrite` + `AllowOverride All` |
 | 运行目录 | `public/` | `public/` |

@@ -4,7 +4,7 @@ title: 08 支付 / 发货 / 商品类型扩展
 
 # 08 支付 / 发货 / 商品类型扩展
 
-这一篇讲**最不能改错**的部分：钱和发货。先看懂链路，再谈扩展。
+这一篇讲钱和发货，这两块最不能改错。先看清链路，再说扩展。
 
 ← [07 前台数据流](/developer/custom/frontend) ｜ [09 安全规范与发布检查](/developer/custom/security) →
 
@@ -39,22 +39,22 @@ POST /api/orders/{no}/pay              PaymentService::start() → 返回网关�
 | --- | --- |
 | `sign($params, $key, $signType)` | 生成签名（默认 MD5） |
 | `verify(...)` / `verifyNotify(...)` | 验签，`verifyNotify()` 内部用 `hash_equals` 防时序攻击 |
-| `isChannel($ch)` / `channelIds()` / `channelLabel()` | 渠道白名单，**本站只放行 `wxpay` / `alipay`** |
+| `isChannel($ch)` / `channelIds()` / `channelLabel()` | 渠道白名单，本站只放行 `wxpay` / `alipay` |
 | `sanitizeGateway()` / `normalizeGateway()` | 网关地址校验与补全（必须 https，补到 `/submit.php`） |
 | `money($cents)` / `toCents($money)` | 元 ↔ 分，避免浮点 |
 | `buildSubmitForm(...)` | 生成提交到网关的表单字段 |
 | `detectDevice($ua)` / `queryOrder(...)` | 设备判断 / 主动查单 |
 
-配置在 `config/config.php` 的 `payment` 段（或 `config/.env` 的 `EPAY_*`），后台「易支付配置」填了值则**以数据库为准**。
+配置在 `config/config.php` 的 `payment` 段（或 `config/.env` 的 `EPAY_*`），后台「易支付配置」填了值则以数据库为准。
 
 ## 三、回调的六条铁律
 
-1. **必须验签**：走 `EPay::verifyNotify()`，不要用 `==` 自己比签名字符串。
-2. **金额必须严格相等**：`EPAY_AMOUNT_TOLERANCE_CENTS` 默认 `0`，回调金额与订单应付金额不一致就拒绝。不要为了「少付一分也能过」把它调大。
-3. **幂等**：网关会重试通知。所有「改订单状态 / 加余额 / 发货」都要先查 `payments` 是否已处理过同一笔交易号，否则会重复发货、重复加钱。
-4. **必须吐纯文本**：成功回 `Response::plain('success')`，不能 `echo`。`api/index.php` 的 shutdown 守卫会把未走 `Response::*` 的输出转成 JSON 500，网关看不懂就会无限重试，见 [03 基础 API](/developer/custom/api)。
-5. **限流**：`RateLimiter::guard('notify')`（默认 1 分钟 120 次）。
-6. **不能套 CSRF / 登录**：回调来自支付网关，没有 `Origin` 和会话，靠签名识别身份。
+1. 必须验签：走 `EPay::verifyNotify()`，不要用 `==` 自己比签名字符串。
+2. 金额必须严格相等：`EPAY_AMOUNT_TOLERANCE_CENTS` 默认 `0`，回调金额与订单应付金额不一致就拒绝。不要为了「少付一分也能过」把它调大。
+3. 幂等：网关会重试通知。所有「改订单状态 / 加余额 / 发货」都要先查 `payments` 是否已处理过同一笔交易号，否则会重复发货、重复加钱。
+4. 必须吐纯文本：成功回 `Response::plain('success')`，不能 `echo`。`api/index.php` 的 shutdown 守卫会把未走 `Response::*` 的输出转成 JSON 500，网关看不懂就会无限重试，见 [03 基础 API](/developer/custom/api)。
+5. 限流：`RateLimiter::guard('notify')`（默认 1 分钟 120 次）。
+6. 不能套 CSRF / 登录：回调来自支付网关，没有 `Origin` 和会话，靠签名识别身份。
 
 ::: warning 显式设置站点基址
 `config/.env` 里设 `SHOP_BASE_URL=https://你的域名`，避免回调地址按请求 `Host` 推断被伪造。生产环境这也是防 Host 头攻击的一项。
@@ -73,13 +73,13 @@ POST /api/orders/{no}/pay              PaymentService::start() → 返回网关�
 
 `DeliveryService` 的关键方法：`deliverVirtualItems()`、`deliverCloud()`、`kindOf()`（type → `order_deliveries.kind`，含 `cloud`）、`renderContent()`、`expand()`、`forOrder()`、`setContent()`、`orderIsAllVirtual()`（cloud 算虚拟，免运费）。
 
-**扩展发货方式需要动三处：**
+扩展发货方式需要动三处：
 
-1. `products.type` 的 CHECK 加新值 → **必须重建表**（见 [04 数据库与迁移](/developer/custom/database) 第五节，SQLite 不能直接改 CHECK）
+1. `products.type` 的 CHECK 加新值 → 必须重建表（见 [04 数据库与迁移](/developer/custom/database) 第五节，SQLite 不能直接改 CHECK）
 2. `order_deliveries.kind` 的 CHECK 同步加值（同样重建表，`migrate.php` 里已有 `rebuildProductsForYulan()` / 交付表重建可参考）
 3. `DeliveryService::kindOf()` 与对应 `deliver*()` 里加分支；后台「商品类型」下拉框、前台展示逻辑同步
 
-> 这正是加入 `yulan` / `cloud` 类型时踩过的坑：`order_deliveries.kind` 的 CHECK 漏加新值，订单写发货记录直接 500。**能不加枚举值就不加** —— 把新类型映射成已有 `virtual` / `physical` 之一，改动会小很多。
+> 这正是加入 `yulan` / `cloud` 类型时踩过的坑：`order_deliveries.kind` 的 CHECK 漏加新值，订单写发货记录直接 500。能不加枚举值就不加 —— 把新类型映射成已有 `virtual` / `physical` 之一，改动会小很多。
 
 ## 五、上游对接（v1.4）
 
@@ -115,12 +115,12 @@ tickets / ticket_replies: 工单与回复
 
 ## 七、严禁清单
 
-- ❌ 把商户密钥 / 服务器口令放进前端 JS、HTML、`data-site` 或日志
-- ❌ 前端自己拼支付签名（密钥只在服务端）
-- ❌ 跳过验签、放宽金额容差、去掉幂等判断
-- ❌ 在回调里 `echo` 而不是 `Response::plain()`
-- ❌ 直接改 `products.type` / `order_deliveries.kind` 的 CHECK 而不重建表
-- ❌ 把回调参数原样写进日志（`PaymentService` 已做截断脱敏）
+- 不要把商户密钥 / 服务器口令放进前端 JS、HTML、`data-site` 或日志
+- 不要让前端自己拼支付签名（密钥只在服务端）
+- 不要跳过验签、放宽金额容差、去掉幂等判断
+- 不要在回调里 `echo` 而不是 `Response::plain()`
+- 不要直接改 `products.type` / `order_deliveries.kind` 的 CHECK 而不重建表
+- 不要把回调参数原样写进日志（`PaymentService` 已做截断脱敏）
 
 ## 八、扩展后的验证
 

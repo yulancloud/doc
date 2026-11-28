@@ -8,11 +8,11 @@ title: 常见问题
 
 ### Q1：Nginx 和 Apache 部署到底差在哪？
 
-只差**要不要手填伪静态**：
+只差要不要手填伪静态：
 
 | | Nginx | Apache |
 | --- | --- | --- |
-| 伪静态框 | 必须粘一段规则 | **留空**，项目自带 `public/.htaccess` |
+| 伪静态框 | 必须粘一段规则 | 留空，项目自带 `public/.htaccess` |
 | 额外开关 | PHP-FPM 解析规则 | `mod_rewrite` + `AllowOverride All` |
 
 其余（运行目录 `public/`、安装向导、`php bin/migrate.php`）完全一样。分别看 [Nginx 部署](/deploy/nginx) 与 [Apache 部署](/deploy/apache)。
@@ -32,11 +32,11 @@ Nginx 把 `/api/index.php` 当静态文件返回了。常见成因是把 `/api/`
 
 ### Q4：Apache 下接口和后台全 404，但静态首页能开？
 
-`.htaccess` 没生效，按顺序查：① 隐藏文件是否真的上传了；② `AllowOverride All`；③ `mod_rewrite` 是否启用。见 [Apache 部署](/deploy/apache)。
+`.htaccess` 没生效，按顺序查：1）隐藏文件是否真的上传了；2）`AllowOverride All`；3）`mod_rewrite` 是否启用。见 [Apache 部署](/deploy/apache)。
 
 ### Q5：访问后台提示「加载失败，服务暂时不可用」？
 
-**部署后没有执行数据库迁移**，新列不存在导致接口报错。运行 `php bin/migrate.php`，再 `Ctrl+F5` 清缓存后重试。迁移脚本幂等，可重复执行。见 [安装与升级](/deploy/install)。
+部署后没有执行数据库迁移，新列不存在导致接口报错。运行 `php bin/migrate.php`，再 `Ctrl+F5` 清缓存后重试。迁移脚本幂等，可重复执行。见 [安装与升级](/deploy/install)。
 
 ### Q6：保存商品 / 设置提示「服务暂时不可用，请稍候再试」？
 
@@ -54,7 +54,7 @@ Nginx 把 `/api/index.php` 当静态文件返回了。常见成因是把 `/api/`
 
 ### Q9：商品类型下拉框在哪？有哪几种类型？
 
-添加 / 编辑商品表单里的「商品类型」下拉框：**实体商品**（人工发货）、**虚拟商品**（模板自动发货）、**魔方财务（对接上游）**（在上游下单开通）、**魔方云（KVM 云服务器）**（自动创建云主机）。v1.4 起新增 cloud 类型；编辑时不重新选择会保持原类型。见 [商品管理](/admin/products)。
+添加 / 编辑商品表单里的「商品类型」下拉框：实体商品（人工发货）、虚拟商品（模板自动发货）、魔方财务（对接上游）（在上游下单开通）、魔方云（KVM 云服务器）（自动创建云主机）。v1.4 起新增 cloud 类型；编辑时不重新选择会保持原类型。见 [商品管理](/admin/products)。
 
 ### Q10：魔方财务怎么开通？还要本地建号端吗？
 
@@ -91,7 +91,7 @@ Nginx 把 `/api/index.php` 当静态文件返回了。常见成因是把 `/api/`
 
 ### Q17：运行目录写错有什么后果？
 
-把运行目录设成项目根目录，`src/`、`config/`、`data/` 会变成可通过 URL 直接下载的文件——数据库、密钥、源码全泄露。**必须是 `public/`**。见 [部署前准备](/deploy/prepare)。
+把运行目录设成项目根目录，`src/`、`config/`、`data/` 会变成可通过 URL 直接下载的文件——数据库、密钥、源码全泄露。必须是 `public/`。见 [部署前准备](/deploy/prepare)。
 
 ## 前台显示与文案（v1.1）
 
@@ -99,17 +99,17 @@ Nginx 把 `/api/index.php` 当静态文件返回了。常见成因是把 `/api/`
 
 按这个顺序查：
 
-1. **浏览器缓存**：`Ctrl+F5` 强刷或开无痕窗口。v1.1 把静态资源版本升到了 `v=20261116e`，不刷会继续跑旧 JS。
-2. **版本是否升到 v1.1**：v1.0 及更早版本里，顶栏分类标签和首页「在售」区大标题是写死在 HTML 里的，后台怎么改都不生效。这是已修复的缺陷，见 [版本更新](/changelog)。
-3. **打字动画**：等动画播完（约 3 秒）再看。旧版 bug 是动画结束时会用写死的旧文案覆盖后台新值，v1.1 已改成停在后台设置上。
-4. **数据源**：看页面 `<html>` 上的 `data-api-source` 属性，若为 `static` 说明没连上 API，走的是静态兜底数据，后台改动自然不生效。
-5. **改对了字段没有**：「站点名称」只管顶栏品牌；想改首屏大字要改「首页主标题」，改导语要改「首页副标题」，改「在售」区大标题要改「商品区标题」。详见 [站点设置与其他](/admin/settings)。
+1. 浏览器缓存：`Ctrl+F5` 强刷或开无痕窗口。v1.1 把静态资源版本升到了 `v=20261116e`，不刷会继续跑旧 JS。
+2. 版本是否升到 v1.1：v1.0 及更早版本里，顶栏分类标签和首页「在售」区大标题是写死在 HTML 里的，后台怎么改都不生效。这是已修复的缺陷，见 [版本更新](/changelog)。
+3. 打字动画：等动画播完（约 3 秒）再看。旧版 bug 是动画结束时会用写死的旧文案覆盖后台新值，v1.1 已改成停在后台设置上。
+4. 数据源：看页面 `<html>` 上的 `data-api-source` 属性，若为 `static` 说明没连上 API，走的是静态兜底数据，后台改动自然不生效。
+5. 改对了字段没有：「站点名称」只管顶栏品牌；想改首屏大字要改「首页主标题」，改导语要改「首页副标题」，改「在售」区大标题要改「商品区标题」。详见 [站点设置与其他](/admin/settings)。
 
 ### Q19：商品「已知不足」在哪里填？为什么前台不显示？
 
-后台「编辑商品」表单底部的「商品缺点 / 已知不足」多行框，每行一条。前台商品详情页会逐条展示；**留空则整栏自动隐藏**，这是正常行为。
+后台「编辑商品」表单底部的「商品缺点 / 已知不足」多行框，每行一条。前台商品详情页会逐条展示；留空则整栏自动隐藏，这是正常行为。
 
-填了但不显示，通常是：① 旧库没跑 `php bin/migrate.php`，`products.flaws` 列还不存在；② 浏览器缓存，需 `Ctrl+F5`。详见 [商品管理](/admin/products) 与 [版本更新](/changelog)。
+填了但不显示，通常是：1）旧库没跑 `php bin/migrate.php`，`products.flaws` 列还不存在；2）浏览器缓存，需 `Ctrl+F5`。详见 [商品管理](/admin/products) 与 [版本更新](/changelog)。
 
 ## 开发者 · 主题定制
 
@@ -117,22 +117,22 @@ Nginx 把 `/api/index.php` 当静态文件返回了。常见成因是把 `/api/`
 
 按这个顺序查：
 
-1. **没 bump 版本号**：所有 HTML 引用 `style.css?v=20261116e`，改了 CSS 不改 `?v=`，浏览器 / CDN 会继续用旧文件。在项目根目录执行
+1. 没 bump 版本号：所有 HTML 引用 `style.css?v=20261116e`，改了 CSS 不改 `?v=`，浏览器 / CDN 会继续用旧文件。在项目根目录执行
    ```bash
    find public -name '*.html' -print0 | xargs -0 sed -i 's/v=20261116e/v=你的新版本号/g'
    ```
-2. **没强刷**：`Ctrl+F5` 或开无痕窗口；前面挂了 Cloudflare 等 CDN 时还要清一层缓存。
-3. **只改了亮色**：`[data-theme=dark]` 是独立一套，切到暗色会露出旧配色。颜色、字重、阴影相关变量要亮暗两处都改。
-4. **只改了 `--accent`**：`--accent-soft`（浅底）与 `--accent-ink`（浅底上的文字）要配套改，否则徽章、按钮仍是旧色系或文字看不清。
+2. 没强刷：`Ctrl+F5` 或开无痕窗口；前面挂了 Cloudflare 等 CDN 时还要清一层缓存。
+3. 只改了亮色：`[data-theme=dark]` 是独立一套，切到暗色会露出旧配色。颜色、字重、阴影相关变量要亮暗两处都改。
+4. 只改了 `--accent`：`--accent-soft`（浅底）与 `--accent-ink`（浅底上的文字）要配套改，否则徽章、按钮仍是旧色系或文字看不清。
 
 变量清单、换色示例、主题切换原理见 [主题定制设置](/developer/theme)。改 PHP 侧文案默认值不生效，见 [PHP 配置与文案默认值](/developer/config)。
 
 ### Q21：自己加的接口 / 页面，升级后没了，或新接口报 404？
 
-- **升级会覆盖**：从 Release 整目录覆盖时 `public/api/index.php`、`style.css`、各 HTML 都会还原成官方版本。定制要整理成补丁，每次升级后重新套用，见 [09 安全规范与发布检查](/developer/custom/security)。
-- **新接口 404**：路由 case 没匹配（顺序被前面的正则抢了），或末尾 `$known` 数组没同步加 —— 方法写错时会返回 404 而不是 405。见 [03 基础 API](/developer/custom/api)。
-- **只改了代码没改表**：新装站点靠 `database/schema.sql`，旧库靠 `bin/migrate.php`，两边都要写，见 [04 数据库与迁移](/developer/custom/database)。
-- **前台读不到数据**：脚本没用 `window.shopBoot()` 注册，或改了 JS 没 bump `?v=` 版本号，见 [07 前台数据流](/developer/custom/frontend)。
+- 升级会覆盖：从 Release 整目录覆盖时 `public/api/index.php`、`style.css`、各 HTML 都会还原成官方版本。定制要整理成补丁，每次升级后重新套用，见 [09 安全规范与发布检查](/developer/custom/security)。
+- 新接口 404：路由 case 没匹配（顺序被前面的正则抢了），或末尾 `$known` 数组没同步加 —— 方法写错时会返回 404 而不是 405。见 [03 基础 API](/developer/custom/api)。
+- 只改了代码没改表：新装站点靠 `database/schema.sql`，旧库靠 `bin/migrate.php`，两边都要写，见 [04 数据库与迁移](/developer/custom/database)。
+- 前台读不到数据：脚本没用 `window.shopBoot()` 注册，或改了 JS 没 bump `?v=` 版本号，见 [07 前台数据流](/developer/custom/frontend)。
 
 完整流程见 [功能自定义 · 学习路线](/developer/custom)。
 
