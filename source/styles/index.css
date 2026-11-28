@@ -108,9 +108,47 @@ body, .press-home-hero, .press-home-features {
   color: var(--yl-blue);
 }
 
-:root[data-theme='dark'] .press-home-hero {
-  background: linear-gradient(180deg, #15181d 0%, #0f1216 100%);
+/* ---------- 深色模式（Valaxy 用 html.dark 切换） ---------- */
+html.dark {
+  --yl-blue: #6d9dff;          /* 深底上更亮的品牌蓝，保证对比度 */
+  --yl-warm: #d3a06a;          /* 提亮的暖棕 */
+  --yl-ink-1: #e8ebf0;         /* 主文字改为浅色 */
+  --yl-ink-2: #c2c8d2;
+  --yl-ink-3: #9aa3b2;         /* 次要文字，深底上足够清晰 */
+  --yl-surface: #15181d;
+  --yl-hair: rgba(232, 235, 240, .12);
+  --yl-shadow: 0 2px 4px rgba(0, 0, 0, .3), 0 18px 40px -24px rgba(0, 0, 0, .7);
+  --yl-shadow-lg: 0 3px 6px rgba(0, 0, 0, .35), 0 32px 64px -28px rgba(0, 0, 0, .8);
 }
-:root[data-theme='dark'] .press-home-features {
-  background: #0f1216;
+
+html.dark .press-home-hero {
+  background: linear-gradient(180deg, #1a1e25 0%, #15181d 100%);
+}
+html.dark .press-home-features {
+  background: #111419;
+}
+html.dark .press-home-features .features-title {
+  color: var(--yl-ink-1);
+}
+/* 深色下 feature 卡片改成深色底 + 浅色文字，正文用主题文字色 */
+html.dark .press-features .press-feature-cell {
+  background: #1c2027 !important;
+  border-color: var(--yl-hair) !important;
+  color: var(--yl-ink-1);
+}
+html.dark .press-features .press-feature-cell * {
+  color: var(--yl-ink-1);
+}
+html.dark .press-features .press-feature-cell .feature-title,
+html.dark .press-features .press-feature-cell h3 {
+  color: var(--yl-blue) !important;
+}
+/* 主按钮深色下用亮蓝底白字，次按钮浅色描边 */
+html.dark .press-home-hero .hero-actions a:first-child {
+  background: var(--yl-blue) !important;
+  color: #0b1220 !important;
+}
+html.dark .press-home-hero .hero-actions a:last-child {
+  color: var(--yl-ink-1) !important;
+  border-color: var(--yl-hair) !important;
 }
