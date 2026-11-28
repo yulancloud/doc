@@ -40,6 +40,7 @@ features:
 | 用 **Apache**，不想填伪静态 | [Apache 部署](/deploy/apache) |
 | 本地先跑起来看看 | [PHP 内置服务器](/deploy/builtin) |
 | 装完初始化、或升级版本 | [安装与升级](/deploy/install) |
+| 切换经典 / 创新界面、配置 5 种支付方式 | [双主题与支付方式](/theme-switch) |
 | 登录后台后不知道点哪 | [后台总览](/admin) |
 | 添加商品、选商品类型 | [商品管理](/admin/products) |
 | 配置在线支付 | [支付配置](/admin/payment) |
